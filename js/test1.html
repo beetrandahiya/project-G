@@ -1,0 +1,117 @@
+<html>
+    <head>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+            </style>
+        <script src="main.js"></script>
+        <script src="beziergraph.js"></script>
+        <script src="stackedbargraph.js"></script>
+        <script src="scattergraph.js"></script>
+        <script src="piegraph.js"></script>
+        <style> 
+        
+        </style>
+    </head>
+    <body>
+        <div id="container"></div>
+        <div id="container1"></div>
+        <div id="container2"></div>
+        <script>
+            datax1=[];
+            datay1=[];
+            for(i=0;i<10;i++){
+                datax1.push(i);
+                datay1.push(10+7*Math.random(i));
+            }
+            
+            data1={
+                x:datax1,
+                y:datay1,
+                colors:colorpallete1,
+                name:"bez",
+                line:{
+                    color:"rgba(1,164,239,1)",
+                    width:2,
+                    fill:"url('#grad2')"   ,
+                    fillstyle:"from-min",
+                    style:"solid"
+                },
+                marker:{
+                    size:0,
+                    color:"#fff",
+                    fill:"#fff"
+                }
+            };
+            data2={
+                x:[1,2,3],
+                y:[[2,4,6,5],[9,3,5],[2,3,6]],
+                colors:shadesofgreen,
+                stack:{
+                    stackstyle:"horizontal"
+                },
+                bar:{
+                    width:80,
+                    borderradius:"2px", //input number will be a percentage, and input string will be a pixel value
+                },
+                visible:true,
+            };
+
+            data3={
+                x:datax1,
+                y:datay1,
+                colors:colorpallete1,
+                bar:{
+                    width:80,
+                    borderradius:"0px", //input number will be a percentage, and input string will be a pixel value
+                }                
+            }
+            layout={
+                width:600,
+                height:400,
+                padding:60,
+                bgcolor:'#ffffff',
+                title:{text:'Test Graph',fontsize:24,fontfamily:'Montserrat',fontcolor:'#000000'},
+                xaxis:{
+                    title:{text:'X-axis',fontfamily:"Montserrat"},
+                    visible:true,
+                    stroke_width:"0.5px"
+                }
+                ,
+                yaxis:{
+                    title:{text:'',fontfamily:"Montserrat"},
+                    no_parts:5,
+                    domain:[0,20],
+                    stroke_width:"0.5px"
+                },
+                xlabel:{
+                    labels:['1','2','3','4','5','6','7','8','9','10'],
+                    visible:false
+                },
+                ylabel:{
+                    visible:true
+                },
+                legend:{
+                    visible:true,
+                    position:"top-right"
+                }
+            }
+            dataa=[data1];
+            datab=[data2];
+            datac=[data3];
+            newLineGraph('container',dataa,layout);
+           // newLineGraph('container1',dataa,layout);[data3]
+           newBezierGraph('container2',dataa,layout);
+           //newStackedBarGraph('container',datab,layout)
+           //newScatterGraph('container2',datab,layout);
+           newPieGraph('container2',dataa,layout);
+
+
+            colors=["rgba(242,80,34,0.6)","rgb(242,80,34,0.1)"];
+            colors1=[["0%","rgba(1,164,239,0.6)"],["100%","rgb(255,255,255,0.1)"]];
+            makeGradient("vertical",colors,"grad1");
+            makeGradient("vertical",colors1,"grad2");
+
+
+        </script>
+    </body>
+</html>
