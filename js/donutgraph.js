@@ -1,4 +1,4 @@
-function newPieGraph(containerDOM, graphData, layout) {
+function newDonutGraph(containerDOM, graphData, layout) {
 
 
     element = document.getElementById(containerDOM);
@@ -83,7 +83,7 @@ function newPieGraph(containerDOM, graphData, layout) {
         ynet = data_y.reduce((a, b) => a + b, 0)
 
         var line = data.line;
-        var pie = data.pie??{};
+        var donut = data.donut??{};
         var line_color = line.color??"#fff";
         var line_width = line.width??2;
         var line_style = line.style??"solid";
@@ -99,10 +99,14 @@ function newPieGraph(containerDOM, graphData, layout) {
 
 
 
-        startx = width / 2;
-        var r = pie.radius??(width - 2 * padding) / 3;
+        
+        var r1 = donut.radius1??(width - 2 * padding) / 4;
+        var r2 = donut.radius2??(width - 2 * padding) / 3;
         rotation = 0;
-        starty = (height / 2) - r;
+        startx1 = width / 2;
+        starty1 = (height / 2) - r1;
+        startx2 = width / 2;
+        starty2 = (height / 2) - r2;
         Δ = 0;
 
         for (i = 0; i <= data_x.length - 1; i++) {
@@ -111,95 +115,38 @@ function newPieGraph(containerDOM, graphData, layout) {
             arcpath = document.createElementNS("http://www.w3.org/2000/svg", "path");
             Δo = data_y[i] * 2 * Math.PI / ynet;
             Δ = Δ + data_y[i] * 2 * Math.PI / ynet;
-            endx = width / 2 + r * Math.sin(Δ);
-            endy = height / 2 - r * Math.cos(Δ);
+            endx1 = width / 2 + r1 * Math.sin(Δ);
+            endy1 = height / 2 - r1 * Math.cos(Δ);
+            endx2 = width / 2 + r2 * Math.sin(Δ);
+            endy2 = height / 2 - r2 * Math.cos(Δ);
 
 
-            const fA = ((Δo > Math.PI) ? 1 : 0);
-            const fS = ((Δo > 0) ? 1 : 0);
+            fA = ((Δo > Math.PI) ? 1 : 0);
+            fS = ((Δo > 0) ? 1 : 0);
 
-            pathtext = "M " + width / 2 + " " + height / 2 + " L " + startx + " " + starty + " A " + r + " " + r + " " + rotation + " " + fA + " " + fS + " " + endx + " " + endy + " z";
+            pathtext = "M " +startx1 + " " + starty1 + " L " + startx2 + " " + starty2 + " A " + r2 + " " + r2 + " " + rotation + " " + fA + " " + fS + " " + endx2 + " " + endy2 + " L "+ endx1+" "+endy1;
+            Δo=-Δo;
+            fA = ((Δo > Math.PI) ? 1 : 0);
+            fS = ((Δo > 0) ? 1 : 0);
+            pathtextback=" A " + r1 + " " + r1 + " " + rotation + " " + fA + " " + fS + " " + startx1 + " " + starty1;
+            pathtext=pathtext+pathtextback;
             arcpath.setAttribute("d", pathtext);
-            arcpath.setAttribute("stroke", "white");
+            arcpath.setAttribute("stroke", line_color);
             arcpath.setAttribute("stroke-width", 2);
             arcpath.setAttribute("fill", colors[i]);
             arcpath.setAttribute("class", "arc");
             //arcpath.addEventListener("mouseover", showTooltip);
             //arcpath.addEventListener("mouseout", hideTooltip);
             mainsvg.appendChild(arcpath);
-            starty = endy;
-            startx = endx;
+            starty1 = endy1;
+            startx1 = endx1;
+            starty2 = endy2;
+            startx2 = endx2;
 
 
         }
 
-        ///////////////////////////////////////////////
-
-/*
-
-
-        tooltipgrp = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        tooltiptext = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        tooltiprect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-        tooltiptext.setAttribute("x", "4");
-        tooltiptext.setAttribute("y", "15");
-        tooltiprect.setAttribute("x", "0");
-        tooltiprect.setAttribute("y", "0");
-        tooltiptext.setAttribute("text-anchor", "middle");
-        tooltiprect.setAttribute("width", "80");
-        tooltiprect.setAttribute("height", "20");
-        tooltiprect.setAttribute("fill", "#fff");
-        tooltiprect.setAttribute("rx", "3");
-        tooltiprect.setAttribute("ry", "3");
-        tooltiptext.innerHTML = " ";
-        tooltipgrp.setAttribute("visibilty", "hidden");
-        tooltipgrp.setAttribute("id", "tooltip");
-        tooltipgrp.appendChild(tooltiprect);
-        tooltipgrp.appendChild(tooltiptext);
-        console.log(tooltipgrp);
-        mainsvg.appendChild(tooltipgrp)
-
-        tooltip = document.getElementById("tooltip");
-        console.log(tooltip);
-        triggers = document.getElementsByClassName('arc');
-        j = 0;
-        while (j < triggers.length) {
-            console.log("done");
-            triggers[j].addEventListener('mousemove', showTooltip);
-            triggers[j].addEventListener('mouseout', hideTooltip);
-            j++;
-        }
-
-        console.log(triggers);
-
-
-        
-function showTooltip(evt) {
-    var CTM = mainsvg.getScreenCTM();
-    var mouseX = (evt.clientX - CTM.e) / CTM.a;
-    var mouseY = (evt.clientY - CTM.f) / CTM.d;
-    var x = (evt.clientX - CTM.e + 6) / CTM.a;
-    var y = (evt.clientY - CTM.f + 20) / CTM.d;
-    tooltip.setAttributeNS(null, "transform", "translate(" + x + " " + y + ")");
-    tooltip.setAttributeNS(null, "visibility", "visible");
-    var tooltipText = tooltip.getElementsByTagName('text')[0];
-    tooltipText.firstChild.data = evt.target.getAttributeNS(null, "title");
-    var tooltipRects = tooltip.getElementsByTagName('rect');
-    var length = tooltipText.getComputedTextLength();
-    tooltipText.setAttribute("x",length/2+4)
-    tooltipText.setAttribute("fill","white")
-    tooltipText.setAttribute("font-family","Open Sans")
-    for (var i = 0; i < tooltipRects.length; i++) {
-      tooltipRects[i].setAttributeNS(null, "width", length + 8);
-      tooltipRects[i].setAttribute("fill","rgba(0,0,0,0.6)")
-      tooltipRects[i].setAttribute("stroke-width","2")
-    }
-    console.log(tooltipText.getComputedTextLength());
-  }
-  function hideTooltip() {
-    tooltip.setAttributeNS(null, "visibility", "hidden");
-  }
-*/
+ 
 
         ///////////////////////////////////////////////
 

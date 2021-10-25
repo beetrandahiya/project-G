@@ -5,9 +5,14 @@
             </style>
         <script src="main.js"></script>
         <script src="beziergraph.js"></script>
+        <script src="bargraph.js"></script>
+
         <script src="stackedbargraph.js"></script>
         <script src="scattergraph.js"></script>
         <script src="piegraph.js"></script>
+        <script src="donutgraph.js"></script>
+        <script src="bubblegraph.js"></script>
+
         <style> 
         
         </style>
@@ -19,11 +24,49 @@
         <script>
             datax1=[];
             datay1=[];
-            for(i=0;i<10;i++){
+            datay2=[];
+            for(i=0;i<7;i++){
                 datax1.push(i);
-                datay1.push(10+7*Math.random(i));
+                datay1.push(10+10*Math.random(-1,1));
+                datay2.push(10+10*Math.random(-1,1));
             }
+            datadonut={
+                x:datax1,
+                y:datay1,
+                colors:colorpallete1,
+                line:{
+                    color:"rgba(255,255,255,1)",
+                    width:0 ,
+                    style:"solid"
+                },
+                donut:{
+                    radius1:80,
+                    radius2:100
+                }
+            };
+            databubble={
+                x:datax1,
+                y:datay1,
+                z:datay1,
+                marker:{
+                    size:0,
+                    color:"rgba(1,164,239,1)",
+                    fill:"rgba(1,164,239,0.5)"
+                }
             
+            };
+            databubble1={
+                x:datax1,
+                y:datay2,
+                z:datay2,
+                colors:colorpallete1,
+                marker:{
+                    size:0,
+                    color:"rgba(178,247,125,1)",
+                    fill:"rgba(178,247,125,0.5)"
+                }
+            
+            };
             data1={
                 x:datax1,
                 y:datay1,
@@ -33,6 +76,27 @@
                     color:"rgba(1,164,239,1)",
                     width:2,
                     fill:"url('#grad2')"   ,
+                    fillstyle:"from-min",
+                    style:"solid"
+                },
+                donut:{
+                    radius1:50,
+                    radius2:100
+                },
+                marker:{
+                    size:0,
+                    color:"#fff",
+                    fill:"#fff"
+                }
+            };
+            data11={
+                x:datax1,
+                y:datay2,
+                name:"bez",
+                line:{
+                    color:"rgba(178,247,125,1)",
+                    width:2,
+                    fill:"url('#grad3')"   ,
                     fillstyle:"from-min",
                     style:"solid"
                 },
@@ -95,21 +159,27 @@
                     position:"top-right"
                 }
             }
-            dataa=[data1];
+            dataa=[data1,data11];
             datab=[data2];
             datac=[data3];
+            datadonut=[datadonut];
+            databubble=[databubble,databubble1];
             newLineGraph('container',dataa,layout);
            // newLineGraph('container1',dataa,layout);[data3]
            newBezierGraph('container2',dataa,layout);
+           newBubbleGraph('container2',databubble,layout);
+           //newBarGraph('container2',dataa,layout);
            //newStackedBarGraph('container',datab,layout)
            //newScatterGraph('container2',datab,layout);
-           newPieGraph('container2',dataa,layout);
+           newDonutGraph('container2',datadonut,layout);
 
 
             colors=["rgba(242,80,34,0.6)","rgb(242,80,34,0.1)"];
             colors1=[["0%","rgba(1,164,239,0.6)"],["100%","rgb(255,255,255,0.1)"]];
+            colors2=[["0%","rgba(178,247,125,0.6)"],["100%","rgb(255,255,255,0.1)"]];
             makeGradient("vertical",colors,"grad1");
             makeGradient("vertical",colors1,"grad2");
+            makeGradient("vertical",colors2,"grad3");
 
 
         </script>
