@@ -12,6 +12,7 @@
         <script src="piegraph.js"></script>
         <script src="donutgraph.js"></script>
         <script src="bubblegraph.js"></script>
+        <script src="longbargraph.js"></script>
 
         <style> 
         
@@ -42,6 +43,21 @@
                 donut:{
                     radius1:80,
                     radius2:100
+                }
+            };
+            datalong={
+                x:datax1,
+                y:datay1,
+                colors:colorpallete1,
+                line:{
+                    color:"rgba(255,255,255,1)",
+                    width:0 ,
+                    style:"solid"
+                },
+                long_bar:{
+                    width:500,
+                    height:10,
+                    borderradius:10
                 }
             };
             databubble={
@@ -163,6 +179,7 @@
             datab=[data2];
             datac=[data3];
             datadonut=[datadonut];
+            datalong=[datalong]
             databubble=[databubble,databubble1];
             newLineGraph('container',dataa,layout);
            // newLineGraph('container1',dataa,layout);[data3]
@@ -172,6 +189,7 @@
            //newStackedBarGraph('container',datab,layout)
            //newScatterGraph('container2',datab,layout);
            newDonutGraph('container2',datadonut,layout);
+           newLongBarGraph('container2',datalong,layout);
 
 
             colors=["rgba(242,80,34,0.6)","rgb(242,80,34,0.1)"];

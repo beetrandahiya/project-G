@@ -120,8 +120,8 @@ function newPieGraph(containerDOM, graphData, layout) {
 
             pathtext = "M " + width / 2 + " " + height / 2 + " L " + startx + " " + starty + " A " + r + " " + r + " " + rotation + " " + fA + " " + fS + " " + endx + " " + endy + " z";
             arcpath.setAttribute("d", pathtext);
-            arcpath.setAttribute("stroke", "white");
-            arcpath.setAttribute("stroke-width", 2);
+            arcpath.setAttribute("stroke", line_color);
+            arcpath.setAttribute("stroke-width", line_width);
             arcpath.setAttribute("fill", colors[i]);
             arcpath.setAttribute("class", "arc");
             //arcpath.addEventListener("mouseover", showTooltip);

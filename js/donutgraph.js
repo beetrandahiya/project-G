@@ -132,7 +132,7 @@ function newDonutGraph(containerDOM, graphData, layout) {
             pathtext=pathtext+pathtextback;
             arcpath.setAttribute("d", pathtext);
             arcpath.setAttribute("stroke", line_color);
-            arcpath.setAttribute("stroke-width", 2);
+            arcpath.setAttribute("stroke-width", line_width);
             arcpath.setAttribute("fill", colors[i]);
             arcpath.setAttribute("class", "arc");
             //arcpath.addEventListener("mouseover", showTooltip);
