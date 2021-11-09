@@ -8,6 +8,7 @@ function newLongBarGraph(containerDOM, graphData, layout) {
     width = layout.width;
     padding = layout.padding;
     bgcolor = layout.bgcolor??'#fff';
+    styles=layout.styles??{};
 
     /////////////////////////////////////////////
 
@@ -23,7 +24,7 @@ function newLongBarGraph(containerDOM, graphData, layout) {
     legend = layout.legend??{};
 
     legend_visible = layout.legend.visible??true;
-    legend_position = layout.legend.position??"top-right";
+    legend_position = layout.legend.position??"bottom";
     legend_font_size = layout.legend.fontsize??12;
     legend_font_color = layout.legend.fontcolor??"rgba(0,0,0,0.5)";
     legend_font_family = layout.legend.fontfamily??"sans-serif";
@@ -41,7 +42,7 @@ function newLongBarGraph(containerDOM, graphData, layout) {
     const mainsvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     mainsvg.setAttributeNS(null, "width", width);
     mainsvg.setAttributeNS(null, "height", height);
-    mainsvg.setAttributeNS(null, "style", "background:" + bgcolor);
+    mainsvg.setAttributeNS(null, "style", "background:" + bgcolor+"; "+styles);
 
 
 
@@ -98,18 +99,15 @@ function newLongBarGraph(containerDOM, graphData, layout) {
         ///////////////////////////////////////////////
 
 
-        var long_bar_width = 500;
-        var long_bar_height = 10;
-        var long_bar_br=5;
 
 
 
         
-/*
+
  var long_bar_width = long_bar.width??500;
         var long_bar_height = long_bar.height??10;
         var long_bar_br=long_bar.borderradius??5;
-*/
+
         for (i = 0; i <= data_x.length - 1; i++) {
 
             arcpath = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -162,6 +160,54 @@ function newLongBarGraph(containerDOM, graphData, layout) {
             //arcpath.addEventListener("mouseout", hideTooltip);
             mainsvg.appendChild(arcpath);
             startx=endx2;
+            }
+            //here we make legends
+            //here we make the legend
+        svglegend = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        svglegendpoint=document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        svglegend.innerHTML = names[i];
+        svglegend.setAttributeNS(null, "fill", legend_font_color);
+        svglegend.setAttributeNS(null, "font-size", legend_font_size);
+        svglegend.setAttributeNS(null, "font-family", legend_font_family);
+        svglegend.setAttributeNS(null, "font-weight", legend_font_weight);
+
+          if (legend_position == "top") {
+            svglegend.setAttributeNS(null, "x", width / 2);
+            svglegend.setAttributeNS(null, "y", padding);
+            svglegendpoint.setAttributeNS(null, "cx", width / 2);
+        svglegendpoint.setAttributeNS(null, "cy", padding + padding / 2 + i * (padding + legend_font_size));
+        } 
+        else if (legend_position == "bottom") {
+            svglegend.setAttributeNS(null,"text-anchor","left");
+            svglegend.setAttributeNS(null, "x", width / 2);
+            svglegend.setAttributeNS(null, "y", 2*padding +long_bar_height+i*(legend_padding+legend_font_size));
+            svglegendpoint.setAttributeNS(null, "cx", width / 2 - 10);
+            svglegendpoint.setAttributeNS(null, "cy", 2*padding+long_bar_height+i*(legend_padding+legend_font_size)-(legend_font_size/3));
+        }
+         else if (legend_position == "left") {
+            svglegend.setAttributeNS(null, "x", 2*legend_padding+2*7  );
+            svglegend.setAttributeNS(null, "y",  padding/2+long_bar_height+i*(legend_padding+legend_font_size));
+            svglegendpoint.setAttributeNS(null, "cx", legend_padding+7);
+            svglegendpoint.setAttributeNS(null, "cy", padding/2+long_bar_height+i*(legend_padding+legend_font_size)-(legend_font_size/3));
+        } else if (legend_position == "right") {
+            svglegend.setAttributeNS(null,"text-anchor","end");
+            svglegend.setAttributeNS(null, "x", width-2*legend_padding-2*7  );
+            svglegend.setAttributeNS(null, "y",  padding/2+long_bar_height+i*(legend_padding+legend_font_size));
+            svglegendpoint.setAttributeNS(null, "cx", width-legend_padding-7);
+            svglegendpoint.setAttributeNS(null, "cy", padding/2+long_bar_height+i*(legend_padding+legend_font_size)-(legend_font_size/3));
+        }
+
+        
+        
+        svglegendpoint.setAttributeNS(null, "r", 7);
+        svglegendpoint.setAttribute('stroke', line_color);
+        svglegendpoint.setAttribute('stroke-width', line_width);
+        svglegendpoint.setAttribute('fill', colors[i]);
+
+        
+        
+        mainsvg.appendChild(svglegendpoint);
+        mainsvg.appendChild(svglegend);
             }
 
 
@@ -274,5 +320,5 @@ function showTooltip(evt) {
 
 
 
-}
+
 

@@ -2,6 +2,7 @@
     <head>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+            
             </style>
         <script src="main.js"></script>
         <script src="beziergraph.js"></script>
@@ -22,7 +23,9 @@
         <div id="container"></div>
         <div id="container1"></div>
         <div id="container2"></div>
-        <script>
+        <div id="container3"></div>
+
+<script>
             datax1=[];
             datay1=[];
             datay2=[];
@@ -49,6 +52,7 @@
                 x:datax1,
                 y:datay1,
                 colors:colorpallete1,
+                names:["abc","bcd","css","d","e","f","ds"],
                 line:{
                     color:"rgba(255,255,255,1)",
                     width:0 ,
@@ -57,7 +61,7 @@
                 long_bar:{
                     width:500,
                     height:10,
-                    borderradius:10
+                    borderradius:4
                 }
             };
             databubble={
@@ -149,6 +153,7 @@
                 width:600,
                 height:400,
                 padding:60,
+                styles:"border-radius:10px",
                 bgcolor:'#ffffff',
                 title:{text:'Test Graph',fontsize:24,fontfamily:'Montserrat',fontcolor:'#000000'},
                 xaxis:{
@@ -174,6 +179,39 @@
                     visible:true,
                     position:"top-right"
                 }
+            };
+            layoutlongbar={
+                width:700,
+                height:200,
+                padding:100,
+                styles:"border-radius:10px",
+
+                bgcolor:'#222',
+                title:{text:'Long Bar Graph',fontsize:24,fontfamily:'Montserrat',fontcolor:'#ddd'},
+                xaxis:{
+                    title:{text:'X-axis',fontfamily:"Montserrat"},
+                    visible:true,
+                    stroke_width:"0.5px"
+                }
+                ,
+                yaxis:{
+                    title:{text:'',fontfamily:"Montserrat"},
+                    no_parts:5,
+                    domain:[0,20],
+                    stroke_width:"0.5px"
+                },
+                xlabel:{
+                    labels:['hello','2','3','4','5','6','7','8','9','10'],
+                    visible:false
+                },
+                ylabel:{
+                    visible:true
+                },
+                legend:{
+                    fontcolor:"#ddd",
+                    visible:true,
+                    position:"right"
+                }
             }
             dataa=[data1,data11];
             datab=[data2];
@@ -189,7 +227,7 @@
            //newStackedBarGraph('container',datab,layout)
            //newScatterGraph('container2',datab,layout);
            newDonutGraph('container2',datadonut,layout);
-           newLongBarGraph('container2',datalong,layout);
+           newLongBarGraph('container3',datalong,layoutlongbar);
 
 
             colors=["rgba(242,80,34,0.6)","rgb(242,80,34,0.1)"];

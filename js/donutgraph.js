@@ -8,6 +8,7 @@ function newDonutGraph(containerDOM, graphData, layout) {
     width = layout.width;
     padding = layout.padding;
     bgcolor = layout.bgcolor??'#fff';
+    styles = layout.styles??{};
 
     /////////////////////////////////////////////
 
@@ -41,7 +42,7 @@ function newDonutGraph(containerDOM, graphData, layout) {
     const mainsvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     mainsvg.setAttributeNS(null, "width", width);
     mainsvg.setAttributeNS(null, "height", height);
-    mainsvg.setAttributeNS(null, "style", "background:" + bgcolor);
+    mainsvg.setAttributeNS(null, "style", "background:" + bgcolor+"; "+styles);
 
 
 
