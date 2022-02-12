@@ -490,8 +490,6 @@ function newLineGraph(containerDOM, graphData, layout) {
         mainsvg.appendChild(polyline_fnl_fill_obj);
         mainsvg.appendChild(polyline_fnl_obj);
 
-
-
  /*   if(animationtrue==true){
 
     const anim=document.createElementNS('http://www.w3.org/2000/svg','animate');
