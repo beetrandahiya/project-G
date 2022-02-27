@@ -4,7 +4,6 @@ shadesofgreen = ['#134611', '#3E8914', '#3DA35D', '#96E072', '#E8FCCF'];
 neonpallete = ['#DB276', '#B0DB43', '#12EAEA', '#440BD4', '#5CE5D5'];
 
 
-
 function newLineGraph(containerDOM, graphData, layout) {
 
 
