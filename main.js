@@ -6,9 +6,11 @@ Creator / Author : Prakrisht Dahiya
 ////////////////////////////////////////////////////////
 ///////////////  Pre-Calculation ///////////////////////
 
-function graphs_precalculate(graphData,layout){
+function graph_precalculate(graphData,layout){
     pre_calc={};
-    for (dataindex = 0; dataindex < graphData.length; dataindex++) { //here we find the max value of the data and set the y axis domain to be the same as the max value of the data.
+
+    //here we find the max value of the data and set the y axis domain to be the same as the max value of the data.
+    for (dataindex = 0; dataindex < graphData.length; dataindex++) { 
         var data = graphData[dataindex];
         var data_y = data.y;
         if (dataindex == 0) {
@@ -21,6 +23,7 @@ function graphs_precalculate(graphData,layout){
         }
     }
 
+    //calculating map ratio and height, width of graph
     h=layout.height;
     w=layout.width;
     pad=layout.padding;
@@ -30,6 +33,8 @@ function graphs_precalculate(graphData,layout){
     pre_calc.y_max = y_max;
     pre_calc.y_min = y_min;
     pre_calc.maxdatasetval_index = maxdatasetval_index;
-
+    pre_calc.h_graph = h_graph;
+    pre_calc.w_graph = w-pad*2;
+    pre_calc.map_ratio = map_ratio;
 
 }
