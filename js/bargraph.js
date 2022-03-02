@@ -9,73 +9,73 @@ function newBarGraph(containerDOM, graphData, layout) {
     height = layout.height;
     width = layout.width;
     padding = layout.padding;
-    bgcolor = layout.bgcolor ?? '#fff';
-    styles = layout.styles ?? {};
+    bgcolor = layout.bgcolor || '#fff';
+    styles = layout.styles || {};
     
 
     /////////////////////////////////////////////
 
-    title = layout.title ?? {};
-    title_font_color=layout.title.fontcolor ?? '#000';
-    title_font_size=layout.title.fontsize ?? '20px';
-    title_font_family=layout.title.fontfamily ?? 'Arial';
-    title_font_weight=layout.title.fontweight ?? 'bold';
+    title = layout.title || {};
+    title_font_color=layout.title.fontcolor || '#000';
+    title_font_size=layout.title.fontsize || '20px';
+    title_font_family=layout.title.fontfamily || 'Arial';
+    title_font_weight=layout.title.fontweight || 'bold';
 
 
     /////////////////////////////////////////////
 
-    xaxis = layout.xaxis ?? {};
-    xaxis_title = xaxis.title ?? {};
-    x_axis_title = layout.xaxis.title.text ?? "";
-    x_axis_title_font_size = layout.xaxis.title.fontsize ?? 18;
-    x_axis_title_font_color = layout.xaxis.title.fontcolor ?? "#000";
-    x_axis_title_font_family = layout.xaxis.title.fontfamily ?? "Arial";
-    x_axis_title_font_weight = layout.xaxis.title.fontweight ?? "bold";
+    xaxis = layout.xaxis || {};
+    xaxis_title = xaxis.title || {};
+    x_axis_title = layout.xaxis.title.text || "";
+    x_axis_title_font_size = layout.xaxis.title.fontsize || 18;
+    x_axis_title_font_color = layout.xaxis.title.fontcolor || "#000";
+    x_axis_title_font_family = layout.xaxis.title.fontfamily || "Arial";
+    x_axis_title_font_weight = layout.xaxis.title.fontweight || "bold";
 
     ///////////////////////////////////////////////
-    x_axis_visible = layout.xaxis.visible ?? true;
-    x_axis_stroke = layout.xaxis.stroke ?? "rgba(0,0,0,0.2)";
-    x_axis_stroke_width = layout.xaxis.stroke_width ?? 1;
+    x_axis_visible = layout.xaxis.visible || true;
+    x_axis_stroke = layout.xaxis.stroke || "rgba(0,0,0,0.2)";
+    x_axis_stroke_width = layout.xaxis.stroke_width || 1;
 
     //////////////////////////////////////////////
 
-    yaxis = layout.yaxis ?? {};
-    yaxis_title = layout.yaxis.title ?? {};
-    y_axis_title = layout.yaxis.title.text ?? "";
-    y_axis_title_font_size = layout.yaxis.title.fontsize ?? 18;
-    y_axis_title_font_color = layout.yaxis.title.fontcolor ?? "#000";
-    y_axis_title_font_family = layout.yaxis.title.fontfamily ?? "Arial";
-    y_axis_title_font_weight = layout.yaxis.title.fontweight ?? "bold";
+    yaxis = layout.yaxis || {};
+    yaxis_title = layout.yaxis.title || {};
+    y_axis_title = layout.yaxis.title.text || "";
+    y_axis_title_font_size = layout.yaxis.title.fontsize || 18;
+    y_axis_title_font_color = layout.yaxis.title.fontcolor || "#000";
+    y_axis_title_font_family = layout.yaxis.title.fontfamily || "Arial";
+    y_axis_title_font_weight = layout.yaxis.title.fontweight || "bold";
 
 
     ///////////////////////////////////////////////
-    y_axis_visible = layout.yaxis.visible ?? true;
-    y_axis_stroke = layout.yaxis.stroke ?? "rgba(0,0,0,0.2)";
-    y_axis_stroke_width = layout.yaxis.stroke_width ?? 1;
-    y_axis_domain = layout.yaxis.domain ?? "auto";
-    y_axis_no_parts = layout.yaxis.no_parts ?? 5;
+    y_axis_visible = layout.yaxis.visible || true;
+    y_axis_stroke = layout.yaxis.stroke || "rgba(0,0,0,0.2)";
+    y_axis_stroke_width = layout.yaxis.stroke_width || 1;
+    y_axis_domain = layout.yaxis.domain || "auto";
+    y_axis_no_parts = layout.yaxis.no_parts || 5;
 
 
     //////////////////////////////////////////////
 
-    xlabel = layout.xlabel ?? {};
+    xlabel = layout.xlabel || {};
 
-    x_labels = layout.xlabel.labels ?? graphData[0].x; //here we set the labels to be shown on x axis and if not specified then we set it to be the x values of the first graph in the data array .
-    x_axis_label_visible = layout.xlabel.visible ?? false;
-    x_axis_label_font_size = layout.xlabel.fontsize ?? 12;
-    x_axis_label_font_color = layout.xlabel.fontcolor ?? "rgba(0,0,0,0.5)";
-    x_axis_label_font_family = layout.xlabel.fontfamily ?? "sans-serif";
-    x_axis_label_font_weight = layout.xlabel.fontweight ?? "normal";
+    x_labels = layout.xlabel.labels || graphData[0].x; //here we set the labels to be shown on x axis and if not specified then we set it to be the x values of the first graph in the data array .
+    x_axis_label_visible = layout.xlabel.visible || false;
+    x_axis_label_font_size = layout.xlabel.fontsize || 12;
+    x_axis_label_font_color = layout.xlabel.fontcolor || "rgba(0,0,0,0.5)";
+    x_axis_label_font_family = layout.xlabel.fontfamily || "sans-serif";
+    x_axis_label_font_weight = layout.xlabel.fontweight || "normal";
 
     /////////////////////////////////////////////
 
-    ylabel = layout.ylabel  ?? {};
+    ylabel = layout.ylabel  || {};
 
-    y_axis_label_visible = layout.ylabel.visible ?? true;
-    y_axis_label_font_size = layout.ylabel.fontsize ?? 12;
-    y_axis_label_font_color = layout.ylabel.fontcolor ?? "rgba(0,0,0,0.5)";
-    y_axis_label_font_family = layout.ylabel.fontfamily ?? "sans-serif";
-    y_axis_label_font_weight = layout.ylabel.fontweight ?? "normal";
+    y_axis_label_visible = layout.ylabel.visible || true;
+    y_axis_label_font_size = layout.ylabel.fontsize || 12;
+    y_axis_label_font_color = layout.ylabel.fontcolor || "rgba(0,0,0,0.5)";
+    y_axis_label_font_family = layout.ylabel.fontfamily || "sans-serif";
+    y_axis_label_font_weight = layout.ylabel.fontweight || "normal";
 
 
     /////////////////////////////////////////////
@@ -172,15 +172,15 @@ function newBarGraph(containerDOM, graphData, layout) {
         var data_x = data.x;
         var data_y = data.y;
         var colors= data.colors;
-        var data_name = data.name ?? "trace " + dataindex;
-        var data_visible = data.visible ?? true;
+        var data_name = data.name || "trace " + dataindex;
+        var data_visible = data.visible || true;
         if (data_visible == false) {
             continue;
         };
 
-        var width_percent = data.bar.width??50;
-        var borderradius = data.bar.borderradius??2;
-        var bar_stroke=data.bar.stroke??"none";
+        var width_percent = data.bar.width||50;
+        var borderradius = data.bar.borderradius||2;
+        var bar_stroke=data.bar.stroke||"none";
 
         
         dx = (width - 2 * padding) / (data_x.length - 1);

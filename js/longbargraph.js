@@ -7,29 +7,29 @@ function newLongBarGraph(containerDOM, graphData, layout) {
     height = layout.height;
     width = layout.width;
     padding = layout.padding;
-    bgcolor = layout.bgcolor??'#fff';
-    styles=layout.styles??{};
+    bgcolor = layout.bgcolor||'#fff';
+    styles=layout.styles||{};
 
     /////////////////////////////////////////////
 
-    title = layout.title??{};
-    title_font_color = layout.title.fontcolor??'#000';
-    title_font_size = layout.title.fontsize??'20px';
-    title_font_family = layout.title.fontfamily??'Arial';
-    title_font_weight = layout.title.fontweight??'bold';
+    title = layout.title||{};
+    title_font_color = layout.title.fontcolor||'#000';
+    title_font_size = layout.title.fontsize||'20px';
+    title_font_family = layout.title.fontfamily||'Arial';
+    title_font_weight = layout.title.fontweight||'bold';
 
 
     /////////////////////////////////////////////
 
-    legend = layout.legend??{};
+    legend = layout.legend||{};
 
-    legend_visible = layout.legend.visible??true;
-    legend_position = layout.legend.position??"bottom";
-    legend_font_size = layout.legend.fontsize??12;
-    legend_font_color = layout.legend.fontcolor??"rgba(0,0,0,0.5)";
-    legend_font_family = layout.legend.fontfamily??"sans-serif";
-    legend_font_weight = layout.legend.fontweight??"normal";
-    legend_padding = layout.legend.padding??10;
+    legend_visible = layout.legend.visible||true;
+    legend_position = layout.legend.position||"bottom";
+    legend_font_size = layout.legend.fontsize||12;
+    legend_font_color = layout.legend.fontcolor||"rgba(0,0,0,0.5)";
+    legend_font_family = layout.legend.fontfamily||"sans-serif";
+    legend_font_weight = layout.legend.fontweight||"normal";
+    legend_padding = layout.legend.padding||10;
 
     /////////////////////////////////////////////
 
@@ -73,10 +73,10 @@ function newLongBarGraph(containerDOM, graphData, layout) {
         var data = graphData[dataindex];
         var data_x = data.x;
         var data_y = data.y;
-        var names = data.names??data_x;
+        var names = data.names||data_x;
         var colors = data.colors;
-        var data_name = data.name??"trace " + dataindex;
-        var data_visible = data.visible??true;
+        var data_name = data.name||"trace " + dataindex;
+        var data_visible = data.visible||true;
         if (data_visible == false) {
             continue;
         };
@@ -84,16 +84,16 @@ function newLongBarGraph(containerDOM, graphData, layout) {
         ynet = data_y.reduce((a, b) => a + b, 0)
 
         var line = data.line;
-        var long_bar = data.long_bar??{};
-        var line_color = line.color??"#fff";
-        var line_width = line.width??2;
-        var line_style = line.style??"solid";
-        var line_linecap = line.linecap??"round";
-        var line_linejoin = line.linejoin??"round";
+        var long_bar = data.long_bar||{};
+        var line_color = line.color||"#fff";
+        var line_width = line.width||2;
+        var line_style = line.style||"solid";
+        var line_linecap = line.linecap||"round";
+        var line_linejoin = line.linejoin||"round";
 
 
 
-        var animationtrue = data.animation??true;
+        var animationtrue = data.animation||true;
 
 
         ///////////////////////////////////////////////
@@ -104,9 +104,9 @@ function newLongBarGraph(containerDOM, graphData, layout) {
 
         
 
- var long_bar_width = long_bar.width??500;
-        var long_bar_height = long_bar.height??10;
-        var long_bar_br=long_bar.borderradius??5;
+ var long_bar_width = long_bar.width||500;
+        var long_bar_height = long_bar.height||10;
+        var long_bar_br=long_bar.borderradius||5;
 
         for (i = 0; i <= data_x.length - 1; i++) {
 
