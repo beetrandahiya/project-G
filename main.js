@@ -193,7 +193,7 @@ class lineGraph{
 
                 var y = data_y[i];
                 var x_pos = pad+dx*i;
-                var y_pos = this.pre_calc.h_graph-(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
+                var y_pos = pad+this.pre_calc.h_graph-(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
                 var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
                 circle.setAttribute("cx",x_pos);
                 circle.setAttribute("cy",y_pos);
