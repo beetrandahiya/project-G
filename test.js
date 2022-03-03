@@ -4,16 +4,17 @@ data={
     y:[25,14,15,17,21,20,17,16],
     name:"bez",
     line:{
-        color:"#ffcc00",
-        width:2,
-        fill:"#fff5cc",
+        color:"#69f56e",
+        width:3,
+        //fill:"#fff5cc",
         fillstyle:"from-min",
         style:"solid"
     },
     marker:{
         size:4,
         color:"#444",
-        fill:"#fff"
+        fill:"#69f56e44",
+        visible:true
     }
 };
 data=[data]
@@ -29,7 +30,7 @@ layout={
     xaxis:{
         title:{text:'X-axis',fontfamily:"Montserrat"},
         visible:false,
-        stroke_width:"0.5px",
+        stroke_width:"0.1px",
         stroke:"#000000",
         style:"solid"
     }
@@ -40,7 +41,7 @@ layout={
         domain:[10,30],
         style: "solid",
         stroke:'#000000',
-        stroke_width:"0.5px",
+        stroke_width:"0.1px",
         visible:true
     },
 

@@ -190,8 +190,8 @@ class lineGraph{
             var marker_fill=data.marker.fill;
             var marker_visible=data.marker.visible||false;
             var polyline_str=" ";
+            var marker_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
             for(i=0;i <data_x.length ; i++){
-                console.log(data_x[i]);
                 var y = data_y[i];
                 var x_pos = pad+dx*i;
                 var y_pos = pad+this.pre_calc.h_graph-(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
@@ -204,7 +204,8 @@ class lineGraph{
                 circle.setAttribute("r",marker_size);
                 circle.setAttribute("stroke",marker_color);
                 circle.setAttribute("fill",marker_fill);
-                svg.appendChild(circle);}
+                marker_grp.appendChild(circle);
+            }
 
                 //lines
                 polyline_str+=x_pos+","+y_pos+" ";
@@ -217,6 +218,7 @@ class lineGraph{
             polyline.setAttribute("stroke-width",line_width);
             polyline.setAttribute("stroke-linecap",line_linecap);
             polyline.setAttribute("stroke-linejoin",line_linejoin);
+            polyline.setAttribute("fill","none");
             switch(line_style){
                 case "solid":
                     polyline.setAttribute("stroke-dasharray","none");
@@ -243,6 +245,7 @@ class lineGraph{
         }
 
         svg.appendChild(polyline);
+        svg.appendChild(marker_grp);
 
 
     }
