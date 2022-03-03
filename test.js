@@ -6,7 +6,7 @@ data={
     line:{
         color:"#ffcc00",
         width:2,
-        fill:"#fff5cc"   ,
+        fill:"#fff5cc",
         fillstyle:"from-min",
         style:"solid"
     },

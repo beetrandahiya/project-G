@@ -189,9 +189,9 @@ class lineGraph{
             var marker_color=data.marker.color;
             var marker_fill=data.marker.fill;
             var marker_visible=data.marker.visible||false;
-            polyline_str="";
+            var polyline_str=" ";
             for(i=0;i <data_x.length ; i++){
-
+                console.log(data_x[i]);
                 var y = data_y[i];
                 var x_pos = pad+dx*i;
                 var y_pos = pad+this.pre_calc.h_graph-(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
@@ -241,6 +241,8 @@ class lineGraph{
                     break;
             }
         }
+
+        svg.appendChild(polyline);
 
 
     }
