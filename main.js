@@ -13,14 +13,23 @@ function graph_precalculate(graphData,layout){
     for (dataindex = 0; dataindex < graphData.length; dataindex++) { 
         var data = graphData[dataindex];
         var data_y = data.y;
+        
         if (dataindex == 0) {
             y_max = Math.max(...data_y);
             y_min = Math.min(...data_y);
+            mostdataset_index = dataindex;
+            mostdataset_length = data_y.length;
+            maxdatasetval_index = 0;
         } else {
             y_max = Math.max(y_max, Math.max(...data_y));
             y_min = Math.min(y_min, Math.min(...data_y));
             maxdatasetval_index = dataindex;
+            if(data_y.length>graphData[mostdataset_index].y.length){
+                mostdataset_index = dataindex;
+                mostdataset_length = data_y.length;
+            }
         }
+
     }
 
     //calculating map ratio and height, width of graph
@@ -35,6 +44,8 @@ function graph_precalculate(graphData,layout){
     pre_calc.y_max = y_max;
     pre_calc.y_min = y_min;
     pre_calc.maxdatasetval_index = maxdatasetval_index;
+    pre_calc.mostdataset_index = mostdataset_index;
+    pre_calc.mostdataset_length = mostdataset_length;
     pre_calc.h_graph = h_graph;
     pre_calc.w_graph = w-pad*2;
     pre_calc.map_ratio = map_ratio;
@@ -43,11 +54,80 @@ function graph_precalculate(graphData,layout){
 
 }
 
-function makegrid(DOM_container,pre_calc,layout){
-    //making the grid
+function makeGrid(DOM_container,pre_calc,layout){
+    //making the main svg
     svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
     svg.setAttribute("width",pre_calc.w);
     svg.setAttribute("height",pre_calc.h);
+    DOM_container.appendChild(svg);
+
+    //making the grid
+    dy=pre_calc.h_graph/(layout.yaxes.no_parts-1);
+    dx=pre_calc.w_graph/(pre_calc.mostdataset_length-1);
+    
+    y_axes_stroke_width=layout.yaxes.stroke_width;
+    y_axes_stroke_color=layout.yaxes.stroke;
+    y_axes_stroke_dasharray=layout.yaxes.style;
+    y_axes_domain=layout.yaxes.domain;
+
+    x_axes_stroke_width=layout.xaxis.stroke_width;
+    x_axes_stroke_color=layout.xaxis.stroke;
+    x_axes_stroke_dasharray=layout.xaxis.style;
+
+
+    if (y_axes_domain != "auto") {
+        y_min = y_axes_domain[0]; //here we set the domain of y axis
+        y_max = y_axes_domain[1];
+    }
+    
+    //y axes
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",pad);
+        line.setAttribute("y1",dy*i+pad);
+        line.setAttribute("x2",pad+pre_calc.w_graph);
+        line.setAttribute("y2",dy*i+pad);
+        line.setAttribute("stroke",y_axes_stroke_color);
+        line.setAttribute("stroke-width",y_axes_stroke_width);
+        switch(y_axes_stroke_dasharray){
+            case "solid":
+                line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                line.setAttribute("stroke-dasharray","3,5");
+                break;
+            case "dotted":
+                line.setAttribute("stroke-dasharray","1,3");
+                break;
+        }
+
+        svg.appendChild(line);
+    }
+
+    //x axes
+    for(i=0;i<  pre_calc.mostdataset_length;i++){
+        line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",pad+dx*i);
+        line.setAttribute("y1",pad);
+        line.setAttribute("x2",dx*i+pad);
+        line.setAttribute("y2",pad+pre_calc.h_graph);
+        line.setAttribute("stroke",x_axes_stroke_color);
+        line.setAttribute("stroke-width",x_axes_stroke_width);
+        switch(x_axes_stroke_dasharray){
+            case "solid":
+                line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                line.setAttribute("stroke-dasharray","4,5");
+                break;
+            case "dotted":
+                line.setAttribute("stroke-dasharray","1,3");
+                break;
+        }     
+
+        svg.appendChild(line);
+    }
+
 
 }
 
@@ -57,7 +137,11 @@ function makegrid(DOM_container,pre_calc,layout){
 
 class lineGraph{
     constructor(DOM_container,graphData,layout){
-        pre_calc = graph_precalculate(graphData,layout);
-        makegrid(DOM_container,layout);
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc = graph_precalculate(this.graphData,this.layout);
+        makeGrid(this.DOM_container,this.pre_calc,this.layout);
+        make
     }
 }
