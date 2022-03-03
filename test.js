@@ -12,7 +12,7 @@ data={
     },
     marker:{
         size:4,
-        color:"#444",
+        color:"#69f56e",
         fill:"#69f56e44",
         visible:true
     }
