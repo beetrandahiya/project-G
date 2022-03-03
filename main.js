@@ -31,6 +31,10 @@ function graph_precalculate(graphData,layout){
         }
 
     }
+    if (layout.yaxes.domain != "auto") {
+        y_min = layout.yaxes.domain[0]; //here we set the domain of y axis
+        y_max = layout.yaxes.domain[1];
+    }
 
     //calculating map ratio and height, width of graph
     h=layout.height;
@@ -41,6 +45,7 @@ function graph_precalculate(graphData,layout){
 
     pre_calc.h=h;
     pre_calc.w=w;
+    pre_calc.pad=pad;
     pre_calc.y_max = y_max;
     pre_calc.y_min = y_min;
     pre_calc.maxdatasetval_index = maxdatasetval_index;
@@ -131,6 +136,22 @@ function makeGrid(DOM_container,pre_calc,layout){
 
 }
 
+function makeTitle(DOM_container,layout){
+    //making the title
+    title=document.createElementNS("http://www.w3.org/2000/svg","text");
+    title.setAttribute("x",layout.width/2);
+    title.setAttribute("y",layout.padding/2);
+    title.setAttribute("text-anchor","middle");
+    title.setAttribute("font-size",layout.title.font_size);
+    title.setAttribute("font-family",layout.title.font_family);
+    title.setAttribute("font-weight",layout.title.font_weight);
+    title.setAttribute("fill",layout.title.color);
+    title.setAttribute("anti-alias","true");
+    title.innerHTML=layout.title.text;
+    svg.appendChild(title);
+}
+
+
 
 ////////////////////////////////////////////////////////
 ///////////////  Drawing the Graph /////////////////////
@@ -142,6 +163,51 @@ class lineGraph{
         this.layout=layout;
         this.pre_calc = graph_precalculate(this.graphData,this.layout);
         makeGrid(this.DOM_container,this.pre_calc,this.layout);
-        make
+        makeTitle(this.DOM_container,this.layout);
+
+        //making points and lines
+        dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
+        dx=this.pre_calc.w_graph/(pre_calc.mostdataset_length-1);
+    
+
+        for(dataindex=0;dataindex<this.graphData.length;dataindex++){
+
+            var data = this.graphData[dataindex];
+            var data_x = data.x;
+            var data_y = data.y;
+            if(data.visible == false){
+                continue;
+            }
+
+            var line_color=data.line.color;
+            var line_width=data.line.width || 2;
+            var line_style=data.line.style || "solid";
+            var line_linecap=data.line.linecap || "round";
+            var line_linejoin=data.line.linejoin || "round";
+
+            var marker_size=data.marker.size;
+            var marker_color=data.marker.color;
+            var marker_fill=data.marker.fill;
+
+            for(i=0;i <data_x.length ; i++){
+
+                var y = data_y[i];
+                var x_pos = pad+dx*i;
+                var y_pos = this.pre_calc.h_graph-(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
+                console.log(this.pre_calc,y_pos);
+                var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+                circle.setAttribute("cx",x_pos);
+                circle.setAttribute("cy",y_pos);
+                circle.setAttribute("r",marker_size);
+                circle.setAttribute("stroke",marker_color);
+                circle.setAttribute("fill",marker_fill);
+                svg.appendChild(circle);
+
+
+            }
+
+        }
+
+
     }
 }
