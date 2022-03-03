@@ -30,6 +30,8 @@ function graph_precalculate(graphData,layout){
     h_graph=h-pad*2;
     map_ratio = h_graph / (y_max - y_min);
 
+    pre_calc.h=h;
+    pre_calc.w=w;
     pre_calc.y_max = y_max;
     pre_calc.y_min = y_min;
     pre_calc.maxdatasetval_index = maxdatasetval_index;
@@ -37,11 +39,25 @@ function graph_precalculate(graphData,layout){
     pre_calc.w_graph = w-pad*2;
     pre_calc.map_ratio = map_ratio;
 
+    return pre_calc;
+
+}
+
+function makegrid(DOM_container,pre_calc,layout){
+    //making the grid
+    svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("width",pre_calc.w);
+    svg.setAttribute("height",pre_calc.h);
+
 }
 
 
 ////////////////////////////////////////////////////////
 ///////////////  Drawing the Graph /////////////////////
+
 class lineGraph{
     constructor(DOM_container,graphData,layout){
-        
+        pre_calc = graph_precalculate(graphData,layout);
+        makegrid(DOM_container,layout);
+    }
+}
