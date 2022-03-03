@@ -38,3 +38,10 @@ function graph_precalculate(graphData,layout){
     pre_calc.map_ratio = map_ratio;
 
 }
+
+
+////////////////////////////////////////////////////////
+///////////////  Drawing the Graph /////////////////////
+class lineGraph{
+    constructor(DOM_container,graphData,layout){
+        
