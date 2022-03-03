@@ -188,23 +188,58 @@ class lineGraph{
             var marker_size=data.marker.size;
             var marker_color=data.marker.color;
             var marker_fill=data.marker.fill;
-
+            var marker_visible=data.marker.visible||false;
+            polyline_str="";
             for(i=0;i <data_x.length ; i++){
 
                 var y = data_y[i];
                 var x_pos = pad+dx*i;
                 var y_pos = pad+this.pre_calc.h_graph-(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
+               
+                //markers
+                if(marker_visible){
                 var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
                 circle.setAttribute("cx",x_pos);
                 circle.setAttribute("cy",y_pos);
                 circle.setAttribute("r",marker_size);
                 circle.setAttribute("stroke",marker_color);
                 circle.setAttribute("fill",marker_fill);
-                svg.appendChild(circle);
+                svg.appendChild(circle);}
 
+                //lines
+                polyline_str+=x_pos+","+y_pos+" ";
 
             }
 
+            var polyline=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+            polyline.setAttribute("points",polyline_str);
+            polyline.setAttribute("stroke",line_color);
+            polyline.setAttribute("stroke-width",line_width);
+            polyline.setAttribute("stroke-linecap",line_linecap);
+            polyline.setAttribute("stroke-linejoin",line_linejoin);
+            switch(line_style){
+                case "solid":
+                    polyline.setAttribute("stroke-dasharray","none");
+                    break;
+                case "dashed":
+                    polyline.setAttribute("stroke-dasharray","3,5");
+                    break;
+                case "dotted":
+                    polyline.setAttribute("stroke-dasharray","0.2,5");
+                    break;
+                case "dash-dot":
+                    polyline.setAttribute("stroke-dasharray","3,5,0.2,5");
+                    break;
+                case "spaced-dot":
+                    polyline.setAttribute("stroke-dasharray","0.2,8");
+                    break;
+                case "spaced-dash":
+                    polyline.setAttribute("stroke-dasharray","4,8");
+                    break;
+                case "long-dash":
+                    polyline.setAttribute("stroke-dasharray","8,8");
+                    break;
+            }
         }
 
 
