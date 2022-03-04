@@ -201,10 +201,32 @@ function makeLabels(DOM_container,pre_calc,layout){
     svg.appendChild(xlabel_grp);
 }
 
-function makeLegend(DOM_container,pre_calc,layout){
+function makeLegend(DOM_container,pre_calc,graphData,layout){
     //making the legend
     legend_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    for(dataindex=0;dataindex<graphData.length;dataindex++){
+        var legend_rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+        legend_rect.setAttribute("x",layout.width-layout.padding);
+        legend_rect.setAttribute("y",layout.padding+dataindex*layout.legend.font_size);
+        legend_rect.setAttribute("width",layout.legend.font_size);
+        legend_rect.setAttribute("height",layout.legend.font_size);
+        legend_rect.setAttribute("fill",graphData[dataindex].color);
+        legend_grp.appendChild(legend_rect);
 
+        var legend_text=document.createElementNS("http://www.w3.org/2000/svg","text");
+        legend_text.setAttribute("x",layout.width-layout.padding+layout.legend.font_size+5);
+        legend_text.setAttribute("y",layout.padding+dataindex*layout.legend.font_size+layout.legend.font_size/2);
+        legend_text.setAttribute("text-anchor","start");
+        legend_text.setAttribute("font-size",layout.legend.font_size);
+        legend_text.setAttribute("font-family",layout.legend.font_family);
+        legend_text.setAttribute("font-weight",layout.legend.font_weight);
+        legend_text.setAttribute("fill",layout.legend.color);
+        legend_text.setAttribute("alignment-baseline","middle");
+        legend_text.setAttribute("anti-alias","true");
+        legend_text.innerHTML=graphData[dataindex].name;
+        legend_grp.appendChild(legend_text);
+    }
+    svg.appendChild(legend_grp);
 }
 
 
@@ -220,7 +242,7 @@ class lineGraph{
         makeGrid(this.DOM_container,this.pre_calc,this.layout);
         makeTitle(this.DOM_container,this.layout);
         makeLabels(this.DOM_container,this.pre_calc,this.layout);
-
+        makeLegend(this.DOM_container,this.pre_calc,this.graphData,this.layout);
         //making points and lines
         dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
         dx=this.pre_calc.w_graph/(pre_calc.mostdataset_length-1);
