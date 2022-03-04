@@ -45,11 +45,11 @@ layout={
         visible:true
     },
 
-    xlabel:{
+    xlabels:{
         labels:['1','2','3','4','5','6','7','8','9','10'],
         visible:false
     },
-    ylabel:{
+    ylabels:{
         visible:true
     },
     legend:{

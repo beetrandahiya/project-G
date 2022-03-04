@@ -36,6 +36,12 @@ function graph_precalculate(graphData,layout){
         y_max = layout.yaxes.domain[1];
     }
 
+    //calculating labels for y axes
+    yaxes_labels=[];
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        yaxes_labels.push(y_min+(y_max-y_min)*(i)/(layout.yaxes.no_parts-1));
+    }
+
     //calculating map ratio and height, width of graph
     h=layout.height;
     w=layout.width;
@@ -54,11 +60,14 @@ function graph_precalculate(graphData,layout){
     pre_calc.h_graph = h_graph;
     pre_calc.w_graph = w-pad*2;
     pre_calc.map_ratio = map_ratio;
+    pre_calc.yaxes_labels = yaxes_labels;
 
     return pre_calc;
 
 }
-
+function lerp(a, b, n) {
+    return (1 - n) * a + n * b;
+}
 function makeGrid(DOM_container,pre_calc,layout){
     //making the main svg
     svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -134,6 +143,9 @@ function makeGrid(DOM_container,pre_calc,layout){
 
         xaxes_grp.appendChild(line);
     }
+
+    //adding the grid to the main svg
+    svg.appendChild(yaxes_grp);
     svg.appendChild(xaxes_grp);
 
 
@@ -154,9 +166,41 @@ function makeTitle(DOM_container,layout){
     svg.appendChild(title);
 }
 
-function makeLabels(DOM_container,layout,pre_calc){
+function makeLabels(DOM_container,pre_calc,layout){
     //making the labels
+    ylabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    xlabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        var ylbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        ylbl.setAttribute("x",pad-5);
+        ylbl.setAttribute("y",pre_calc.h-dy*i-pad);
+        ylbl.setAttribute("text-anchor","end");
+        ylbl.setAttribute("font-size",layout.ylabels.font_size);
+        ylbl.setAttribute("font-family",layout.ylabels.font_family);
+        ylbl.setAttribute("font-weight",layout.ylabels.font_weight);
+        ylbl.setAttribute("fill",layout.ylabels.color);
+        ylbl.setAttribute("anti-alias","true");
+        ylbl.innerHTML=pre_calc.yaxes_labels[i];
+        ylabel_grp.appendChild(ylbl);
+    }
 
+    for(i=0;i<pre_calc.mostdataset_length;i++){
+        var xlbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        xlbl.setAttribute("x",dx*i+pad+layout.xlabels.label_padding);
+        xlbl.setAttribute("y",pad+pre_calc.h_graph+layout.xlabels.label_padding);
+        xlbl.setAttribute("text-anchor","middle");
+        xlbl.setAttribute("font-size",layout.xlabels.font_size);
+        xlbl.setAttribute("font-family",layout.xlabels.font_family);
+        xlbl.setAttribute("font-weight",layout.xlabels.font_weight);
+        xlbl.setAttribute("fill",layout.xlabels.color);
+        xlbl.setAttribute("anti-alias","true");
+        xlbl.innerHTML=layout.xlabels.labels[i];
+        xlabel_grp.appendChild(xlbl);
+    }
+
+    svg.appendChild(ylabel_grp);
+    svg.appendChild(xlabel_grp);
+}
 
 
 
@@ -171,6 +215,7 @@ class lineGraph{
         this.pre_calc = graph_precalculate(this.graphData,this.layout);
         makeGrid(this.DOM_container,this.pre_calc,this.layout);
         makeTitle(this.DOM_container,this.layout);
+        makeLabels(this.DOM_container,this.pre_calc,this.layout);
 
         //making points and lines
         dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
