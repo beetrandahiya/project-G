@@ -41,7 +41,7 @@ layout={
     width:800,
     height:400,
     padding:80,
-    styles:"border-radius:10px;background-color:#fcf;",
+    styles:"border-radius:10px; background-color:#eee;",
     bgcolor:'#ffffff',
     title:{text:'Test Graph',font_size:34,font_family:'Montserrat',color:'#000000',font_weight:'bold'},
 
