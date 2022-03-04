@@ -224,15 +224,15 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
                 break;
             case "top-left":
-                legend_line.setAttribute("x1",layout.padding);
+                legend_line.setAttribute("x1",layout.legend.padding);
                 legend_line.setAttribute("y1",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
-                legend_line.setAttribute("x2",layout.padding+2*layout.legend.font_size);
+                legend_line.setAttribute("x2",layout.legend.padding+2*layout.legend.font_size);
                 legend_line.setAttribute("y2",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
 
-                legend_marker.setAttribute("cx",layout.padding+layout.legend.font_size);
+                legend_marker.setAttribute("cx",layout.legend.padding+layout.legend.font_size);
                 legend_marker.setAttribute("cy",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
 
-                legend_text.setAttribute("x",layout.padding+2*layout.legend.font_size+layout.legend.padding);
+                legend_text.setAttribute("x",layout.legend.padding+2*layout.legend.font_size+layout.legend.padding);
                 legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
                 break;
         }
