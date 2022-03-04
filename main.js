@@ -206,16 +206,16 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
     legend_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
     for(dataindex=0;dataindex<graphData.length;dataindex++){
         var legend_rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
-        legend_rect.setAttribute("x",layout.width-layout.padding);
-        legend_rect.setAttribute("y",layout.padding+dataindex*layout.legend.font_size);
+        legend_rect.setAttribute("x",layout.width-layout.padding+layout.legend.padding/2    );
+        legend_rect.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
         legend_rect.setAttribute("width",layout.legend.font_size);
         legend_rect.setAttribute("height",layout.legend.font_size);
         legend_rect.setAttribute("fill",graphData[dataindex].color);
         legend_grp.appendChild(legend_rect);
 
         var legend_text=document.createElementNS("http://www.w3.org/2000/svg","text");
-        legend_text.setAttribute("x",layout.width-layout.padding+layout.legend.font_size+5);
-        legend_text.setAttribute("y",layout.padding+dataindex*layout.legend.font_size+layout.legend.font_size/2);
+        legend_text.setAttribute("x",layout.width-layout.padding+2*layout.legend.padding);
+        legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
         legend_text.setAttribute("text-anchor","start");
         legend_text.setAttribute("font-size",layout.legend.font_size);
         legend_text.setAttribute("font-family",layout.legend.font_family);
