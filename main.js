@@ -71,6 +71,8 @@ function makeGrid(DOM_container,pre_calc,layout){
     svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
     svg.setAttribute("width",pre_calc.w);
     svg.setAttribute("height",pre_calc.h);
+    svg.setAttribute("viewBox","0 0 "+pre_calc.w+" "+pre_calc.h);
+    svg.setAttribute("style",layout.styles)
     DOM_container.appendChild(svg);
 
     //making the grid
@@ -404,8 +406,8 @@ class lineGraph{
             }
             svg.appendChild(polyline);
             svg.appendChild(marker_grp);
+            
         }
-
        
 
 
