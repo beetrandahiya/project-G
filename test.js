@@ -19,13 +19,13 @@ data={
 };
 data1={
     x:[1,2,3,4,5,6,7,8],
-    y:[20,24,25,17,12,14,13,16],
+    y:[20,24,25,17,-2,14,13,16],
     name:"chelsea",
     line:{
         color:"#695FE6",
         width:3,
         fill:"#695fe655",
-        fill_style:"from-min",
+        fill_style:"from-zero",
         style:"solid"
     },
     marker:{
@@ -56,7 +56,7 @@ layout={
     yaxes:{
         title:{text:'',fontfamily:"Montserrat"},
         no_parts:5,
-        domain:[10,30],
+        domain:[-10,30],
         style: "solid",
         stroke:'#000000',
         stroke_width:"0.1px",
