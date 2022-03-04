@@ -49,6 +49,10 @@ function graph_precalculate(graphData,layout){
     h_graph=h-pad*2;
     map_ratio = h_graph / (y_max - y_min);
 
+    //zero val coord
+    zeroval_coord=pad+h_graph-(0-y_min)*map_ratio;
+
+
     pre_calc.h=h;
     pre_calc.w=w;
     pre_calc.pad=pad;
@@ -61,6 +65,7 @@ function graph_precalculate(graphData,layout){
     pre_calc.w_graph = w-pad*2;
     pre_calc.map_ratio = map_ratio;
     pre_calc.yaxes_labels = yaxes_labels;
+    pre_calc.zeroval_coord = zeroval_coord;
 
     return pre_calc;
 
@@ -396,7 +401,28 @@ class lineGraph{
                     var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
                     break;
                 case "from-zero":
-                    x1=this.pre_calc.pad;    //to be added
+                    if(this.pre_calc.y_min>0){
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.h-this.pre_calc.pad;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.pad;
+                        var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
+                    }
+                    else if(this.pre_calc.y_max<0){
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.h-this.pre_calc.pad;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.h-this.pre_calc.pad;
+                        var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
+                    }
+                    else{
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.zeroval_coord;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.zeroval_coord;
+                        var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
+                    }
+
                     
              }
 
