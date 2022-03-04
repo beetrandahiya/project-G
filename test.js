@@ -19,7 +19,7 @@ data={
 };
 data1={
     x:[1,2,3,4,5,6,7,8],
-    y:[20,24,25,17,12,10,13,16],
+    y:[20,24,25,17,12,14,13,16],
     name:"chelsea",
     line:{
         color:"#695FE6",
@@ -29,7 +29,7 @@ data1={
         style:"solid"
     },
     marker:{
-        size:4,
+        size:0,
         color:"#695FE6",
         fill:"#695fe644",
         visible:true
@@ -41,7 +41,7 @@ layout={
     width:800,
     height:400,
     padding:80,
-    styles:"border-radius:10px; background-color:#eee;",
+    styles:"border-radius:10px; background-color:#eee; padding:30px;",
     bgcolor:'#ffffff',
     title:{text:'Test Graph',font_size:34,font_family:'Montserrat',color:'#000000',font_weight:'bold'},
 
