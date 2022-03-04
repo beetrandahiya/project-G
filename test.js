@@ -78,7 +78,7 @@ layout={
     },
     legend:{
         visible:true,
-        position:"top-left",
+        position:"bottom-right",
         font_family:"Montserrat",
         font_size:12,
         font_weight:"bold",
