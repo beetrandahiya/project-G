@@ -38,7 +38,7 @@ layout={
     yaxes:{
         title:{text:'',fontfamily:"Montserrat"},
         no_parts:5,
-        domain:[0,30],
+        domain:[10,30],
         style: "solid",
         stroke:'#000000',
         stroke_width:"0.1px",

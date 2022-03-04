@@ -171,12 +171,13 @@ function makeLabels(DOM_container,pre_calc,layout){
     for(i=0;i<layout.yaxes.no_parts;i++){
         var ylbl= document.createElementNS("http://www.w3.org/2000/svg","text");
         ylbl.setAttribute("x",pad-5);
-        ylbl.setAttribute("y",pre_calc.h-(dy*i)-pad+layout.ylabels.font_size/3);
+        ylbl.setAttribute("y",pre_calc.h-(dy*i)-pad);
         ylbl.setAttribute("text-anchor","end");
         ylbl.setAttribute("font-size",layout.ylabels.font_size);
         ylbl.setAttribute("font-family",layout.ylabels.font_family);
         ylbl.setAttribute("font-weight",layout.ylabels.font_weight);
         ylbl.setAttribute("fill",layout.ylabels.color);
+        ylbl.setAttribute("alignment-baseline","middle");
         ylbl.setAttribute("anti-alias","true");
         ylbl.innerHTML=pre_calc.yaxes_labels[i];
         ylabel_grp.appendChild(ylbl);
@@ -200,6 +201,11 @@ function makeLabels(DOM_container,pre_calc,layout){
     svg.appendChild(xlabel_grp);
 }
 
+function makeLegend(DOM_container,pre_calc,layout){
+    //making the legend
+    legend_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+
+}
 
 
 ////////////////////////////////////////////////////////
