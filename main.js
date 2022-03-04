@@ -260,7 +260,7 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 legend_text.setAttribute("y",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
                 break;
         }
-       legend_line.setAttribute("stroke",graphData[dataindex].line.color);
+        legend_line.setAttribute("stroke",graphData[dataindex].line.color);
         legend_line.setAttribute("stroke-width",graphData[dataindex].line.width);
         legend_line.setAttribute("stroke-linecap",graphData[dataindex].line.stroke_linecap||"round");
         legend_line.setAttribute("stroke-linejoin",graphData[dataindex].line.stroke_linejoin||"round");
