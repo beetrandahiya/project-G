@@ -247,6 +247,18 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 legend_text.setAttribute("x",layout.width-layout.padding+2*layout.legend.padding+2*layout.legend.font_size);
                 legend_text.setAttribute("y",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
                 break;
+            case "bottom-left":
+                legend_line.setAttribute("x1",layout.legend.padding);
+                legend_line.setAttribute("y1",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+                legend_line.setAttribute("x2",layout.legend.padding+2*layout.legend.font_size);
+                legend_line.setAttribute("y2",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+                
+                legend_marker.setAttribute("cx",layout.legend.padding+layout.legend.font_size);
+                legend_marker.setAttribute("cy",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+
+                legend_text.setAttribute("x",layout.legend.padding+2*layout.legend.font_size+layout.legend.padding);
+                legend_text.setAttribute("y",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+                break;
         }
        legend_line.setAttribute("stroke",graphData[dataindex].line.color);
         legend_line.setAttribute("stroke-width",graphData[dataindex].line.width);
