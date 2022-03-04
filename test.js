@@ -64,6 +64,7 @@ layout={
         font_family:"Montserrat",
         font_size:12,
         font_weight:"bold",
+        padding:5,
     }
 };
 
