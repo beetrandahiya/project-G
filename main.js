@@ -86,6 +86,7 @@ function makeGrid(DOM_container,pre_calc,layout){
     }
     
     //y axes
+    yaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
     for(i=0;i<layout.yaxes.no_parts;i++){
         line=document.createElementNS("http://www.w3.org/2000/svg","line");
         line.setAttribute("x1",pad);
@@ -106,10 +107,11 @@ function makeGrid(DOM_container,pre_calc,layout){
                 break;
         }
 
-        svg.appendChild(line);
+        yaxes_grp.appendChild(line);
     }
 
     //x axes
+    xaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
     for(i=0;i<  pre_calc.mostdataset_length;i++){
         line=document.createElementNS("http://www.w3.org/2000/svg","line");
         line.setAttribute("x1",pad+dx*i);
@@ -130,8 +132,9 @@ function makeGrid(DOM_container,pre_calc,layout){
                 break;
         }     
 
-        svg.appendChild(line);
+        xaxes_grp.appendChild(line);
     }
+    svg.appendChild(xaxes_grp);
 
 
 }
@@ -150,6 +153,10 @@ function makeTitle(DOM_container,layout){
     title.innerHTML=layout.title.text;
     svg.appendChild(title);
 }
+
+function makeLabels(DOM_container,layout,pre_calc){
+    //making the labels
+
 
 
 
