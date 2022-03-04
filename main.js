@@ -477,3 +477,10 @@ class lineGraph{
 
     }
 }
+
+
+class bezierGraph{
+    constructor(DOM_container,graphData,layouts){
+        
+    }
+}
