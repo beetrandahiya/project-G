@@ -353,6 +353,7 @@ class lineGraph{
             var marker_visible=data.marker.visible||false;
             var polyline_str=" ";
             var marker_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+
             for(i=0;i <data_x.length ; i++){
                 var y = data_y[i];
                 var x_pos = pad+dx*i;
@@ -373,6 +374,30 @@ class lineGraph{
                 polyline_str+=x_pos+","+y_pos+" ";
 
             }
+             // defining points for fill
+             switch(data.line.fill_style){
+                case "none":
+                    break;
+                case "from-min":
+                    var x1=this.pre_calc.pad;
+                    var y1=this.pre_calc.h-this.pre_calc.pad;
+                    var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                    var y2=this.pre_calc.h-this.pre_calc.pad;
+                    var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
+                    break;
+                case "from-max":
+                    var x1=this.pre_calc.pad;
+                    var y1=this.pre_calc.pad;
+                    var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                    var y2=this.pre_calc.pad;
+                    var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
+                    break;
+                case "from-zero":
+                    x1=this.pre_calc.pad;
+                    
+             }
+
+
 
             var polyline=document.createElementNS("http://www.w3.org/2000/svg","polyline");
             polyline.setAttribute("points",polyline_str);

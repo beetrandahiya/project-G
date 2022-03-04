@@ -25,7 +25,7 @@ data1={
         color:"#695FE6",
         width:3,
         //fill:"#fff5cc",
-        fillstyle:"from-min",
+        fill_style:"from-min",
         style:"solid"
     },
     marker:{
