@@ -38,7 +38,7 @@ layout={
     yaxes:{
         title:{text:'',fontfamily:"Montserrat"},
         no_parts:5,
-        domain:[10,30],
+        domain:[0,30],
         style: "solid",
         stroke:'#000000',
         stroke_width:"0.1px",
@@ -47,10 +47,16 @@ layout={
 
     xlabels:{
         labels:['1','2','3','4','5','6','7','8','9','10'],
-        visible:false
+        visible:false,
+        font_family:"Montserrat",
+        font_size:12,
+        font_weight:"bold",
     },
     ylabels:{
-        visible:true
+        visible:true,
+        font_family:"Montserrat",
+        font_size:12,
+        font_weight:"bold",
     },
     legend:{
         visible:true,

@@ -65,9 +65,7 @@ function graph_precalculate(graphData,layout){
     return pre_calc;
 
 }
-function lerp(a, b, n) {
-    return (1 - n) * a + n * b;
-}
+
 function makeGrid(DOM_container,pre_calc,layout){
     //making the main svg
     svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -173,7 +171,7 @@ function makeLabels(DOM_container,pre_calc,layout){
     for(i=0;i<layout.yaxes.no_parts;i++){
         var ylbl= document.createElementNS("http://www.w3.org/2000/svg","text");
         ylbl.setAttribute("x",pad-5);
-        ylbl.setAttribute("y",pre_calc.h-dy*i-pad);
+        ylbl.setAttribute("y",pre_calc.h-(dy*i)-pad+layout.ylabels.font_size/3);
         ylbl.setAttribute("text-anchor","end");
         ylbl.setAttribute("font-size",layout.ylabels.font_size);
         ylbl.setAttribute("font-family",layout.ylabels.font_family);
@@ -186,8 +184,8 @@ function makeLabels(DOM_container,pre_calc,layout){
 
     for(i=0;i<pre_calc.mostdataset_length;i++){
         var xlbl= document.createElementNS("http://www.w3.org/2000/svg","text");
-        xlbl.setAttribute("x",dx*i+pad+layout.xlabels.label_padding);
-        xlbl.setAttribute("y",pad+pre_calc.h_graph+layout.xlabels.label_padding);
+        xlbl.setAttribute("x",dx*i+pad);
+        xlbl.setAttribute("y",pre_calc.h-pad+layout.xlabels.font_size);
         xlbl.setAttribute("text-anchor","middle");
         xlbl.setAttribute("font-size",layout.xlabels.font_size);
         xlbl.setAttribute("font-family",layout.xlabels.font_family);
