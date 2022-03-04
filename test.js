@@ -20,18 +20,18 @@ data={
 data1={
     x:[1,2,3,4,5,6,7,8],
     y:[20,24,25,17,12,10,13,16],
-    name:"bez",
+    name:"chelsea",
     line:{
         color:"#695FE6",
         width:3,
         //fill:"#fff5cc",
         fillstyle:"from-min",
-        style:"dotted"
+        style:"solid"
     },
     marker:{
         size:4,
         color:"#695FE6",
-        fill:"#69f56e44",
+        fill:"#695fe644",
         visible:true
     }
 };

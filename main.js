@@ -238,6 +238,15 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 legend_line.setAttribute("stroke-dasharray","8,8");
                 break;
         }
+        
+        var legend_marker=document.createElementNS("http://www.w3.org/2000/svg","circle");
+        legend_marker.setAttribute("cx",layout.width-layout.padding+layout.legend.padding+layout.legend.font_size);
+        legend_marker.setAttribute("cy",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+        legend_marker.setAttribute("r",graphData[dataindex].marker.size);
+        legend_marker.setAttribute("fill",graphData[dataindex].marker.fill);
+        legend_marker.setAttribute("stroke",graphData[dataindex].marker.color);
+
+        legend_grp.appendChild(legend_marker);
         legend_grp.appendChild(legend_line);
 
         var legend_text=document.createElementNS("http://www.w3.org/2000/svg","text");
