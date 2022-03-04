@@ -343,7 +343,7 @@ class lineGraph{
 
             var line_color=data.line.color;
             var line_width=data.line.width || 2;
-            var line_fill=data.line.fill;
+            var line_fill=data.line.fill||"none";
             var line_fillstyle=data.line.fill_style;
             var line_style=data.line.style || "solid";
             var line_linecap=data.line.linecap || "round";
@@ -376,6 +376,7 @@ class lineGraph{
                 polyline_str+=x_pos+","+y_pos+" ";
 
             }
+
              // defining points for fill
              switch(line_fillstyle){
                 case "none":

@@ -35,7 +35,7 @@ data1={
         visible:true
     }
 };
-data=[data,data1]
+dataset=[data1,data]
 
 layout={
     width:800,
@@ -86,4 +86,4 @@ layout={
     }
 };
 
-new lineGraph(document.getElementById("container"),data,layout);
+new lineGraph(document.getElementById("container"),dataset,layout);
