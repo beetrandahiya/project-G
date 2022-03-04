@@ -206,11 +206,37 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
     legend_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
     for(dataindex=0;dataindex<graphData.length;dataindex++){
         var legend_line=document.createElementNS("http://www.w3.org/2000/svg","line");
-        legend_line.setAttribute("x1",layout.width-layout.padding+layout.legend.padding);
-        legend_line.setAttribute("y1",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
-        legend_line.setAttribute("x2",layout.width-layout.padding+layout.legend.padding+2*layout.legend.font_size);
-        legend_line.setAttribute("y2",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
-        legend_line.setAttribute("stroke",graphData[dataindex].line.color);
+        var legend_marker=document.createElementNS("http://www.w3.org/2000/svg","circle");
+        var legend_text=document.createElementNS("http://www.w3.org/2000/svg","text");
+
+
+        switch(layout.legend.position){
+            case "top-right":
+                legend_line.setAttribute("x1",layout.width-layout.padding+layout.legend.padding);
+                legend_line.setAttribute("y1",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+                legend_line.setAttribute("x2",layout.width-layout.padding+layout.legend.padding+2*layout.legend.font_size);
+                legend_line.setAttribute("y2",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+                
+                legend_marker.setAttribute("cx",layout.width-layout.padding+layout.legend.padding+layout.legend.font_size);
+                legend_marker.setAttribute("cy",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+
+                legend_text.setAttribute("x",layout.width-layout.padding+2*layout.legend.padding+2*layout.legend.font_size);
+                legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+                break;
+            case "top-left":
+                legend_line.setAttribute("x1",layout.padding);
+                legend_line.setAttribute("y1",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+                legend_line.setAttribute("x2",layout.padding+2*layout.legend.font_size);
+                legend_line.setAttribute("y2",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+
+                legend_marker.setAttribute("cx",layout.padding+layout.legend.font_size);
+                legend_marker.setAttribute("cy",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+
+                legend_text.setAttribute("x",layout.padding+2*layout.legend.font_size+layout.legend.padding);
+                legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+                break;
+        }
+       legend_line.setAttribute("stroke",graphData[dataindex].line.color);
         legend_line.setAttribute("stroke-width",graphData[dataindex].line.width);
         legend_line.setAttribute("stroke-linecap",graphData[dataindex].line.stroke_linecap||"round");
         legend_line.setAttribute("stroke-linejoin",graphData[dataindex].line.stroke_linejoin||"round");
@@ -239,20 +265,13 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 break;
         }
         
-        var legend_marker=document.createElementNS("http://www.w3.org/2000/svg","circle");
-        legend_marker.setAttribute("cx",layout.width-layout.padding+layout.legend.padding+layout.legend.font_size);
-        legend_marker.setAttribute("cy",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
         legend_marker.setAttribute("r",graphData[dataindex].marker.size);
         legend_marker.setAttribute("fill",graphData[dataindex].marker.fill);
         legend_marker.setAttribute("stroke",graphData[dataindex].marker.color);
 
-        legend_grp.appendChild(legend_marker);
-        legend_grp.appendChild(legend_line);
+        
 
-        var legend_text=document.createElementNS("http://www.w3.org/2000/svg","text");
-        legend_text.setAttribute("x",layout.width-layout.padding+2*layout.legend.padding+2*layout.legend.font_size);
-        legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
-        legend_text.setAttribute("text-anchor","start");
+         legend_text.setAttribute("text-anchor","start");
         legend_text.setAttribute("font-size",layout.legend.font_size);
         legend_text.setAttribute("font-family",layout.legend.font_family);
         legend_text.setAttribute("font-weight",layout.legend.font_weight);
@@ -260,6 +279,9 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
         legend_text.setAttribute("alignment-baseline","middle");
         legend_text.setAttribute("anti-alias","true");
         legend_text.innerHTML=graphData[dataindex].name;
+
+        legend_grp.appendChild(legend_marker);
+        legend_grp.appendChild(legend_line);
         legend_grp.appendChild(legend_text);
     }
     svg.appendChild(legend_grp);
