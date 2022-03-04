@@ -24,7 +24,7 @@ data1={
     line:{
         color:"#695FE6",
         width:3,
-        //fill:"#fff5cc",
+        fill:"#695fe655",
         fill_style:"from-min",
         style:"solid"
     },

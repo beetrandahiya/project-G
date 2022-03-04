@@ -343,6 +343,8 @@ class lineGraph{
 
             var line_color=data.line.color;
             var line_width=data.line.width || 2;
+            var line_fill=data.line.fill;
+            var line_fillstyle=data.line.fill_style;
             var line_style=data.line.style || "solid";
             var line_linecap=data.line.linecap || "round";
             var line_linejoin=data.line.linejoin || "round";
@@ -375,7 +377,7 @@ class lineGraph{
 
             }
              // defining points for fill
-             switch(data.line.fill_style){
+             switch(line_fillstyle){
                 case "none":
                     break;
                 case "from-min":
@@ -393,7 +395,7 @@ class lineGraph{
                     var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
                     break;
                 case "from-zero":
-                    x1=this.pre_calc.pad;
+                    x1=this.pre_calc.pad;    //to be added
                     
              }
 
@@ -429,6 +431,16 @@ class lineGraph{
                     polyline.setAttribute("stroke-dasharray","8,8");
                     break;
             }
+
+            var filline=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+            filline.setAttribute("points",fill_str);
+            filline.setAttribute("stroke","none");
+            filline.setAttribute("stroke-width",0);
+            filline.setAttribute("fill",line_fill);
+            filline.setAttribute("stroke-linecap",line_linecap);
+            filline.setAttribute("stroke-linejoin",line_linejoin);
+            
+            svg.appendChild(filline);
             svg.appendChild(polyline);
             svg.appendChild(marker_grp);
             
