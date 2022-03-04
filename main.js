@@ -205,16 +205,43 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
     //making the legend
     legend_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
     for(dataindex=0;dataindex<graphData.length;dataindex++){
-        var legend_rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
-        legend_rect.setAttribute("x",layout.width-layout.padding+layout.legend.padding/2    );
-        legend_rect.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
-        legend_rect.setAttribute("width",layout.legend.font_size);
-        legend_rect.setAttribute("height",layout.legend.font_size);
-        legend_rect.setAttribute("fill",graphData[dataindex].color);
-        legend_grp.appendChild(legend_rect);
+        var legend_line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        legend_line.setAttribute("x1",layout.width-layout.padding+layout.legend.padding);
+        legend_line.setAttribute("y1",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+        legend_line.setAttribute("x2",layout.width-layout.padding+layout.legend.padding+2*layout.legend.font_size);
+        legend_line.setAttribute("y2",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+        legend_line.setAttribute("stroke",graphData[dataindex].line.color);
+        legend_line.setAttribute("stroke-width",graphData[dataindex].line.width);
+        legend_line.setAttribute("stroke-linecap",graphData[dataindex].line.stroke_linecap||"round");
+        legend_line.setAttribute("stroke-linejoin",graphData[dataindex].line.stroke_linejoin||"round");
+        // applying line style to legend
+        switch(graphData[dataindex].line.style){
+            case "solid":
+                legend_line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                legend_line.setAttribute("stroke-dasharray","3,5");
+                break;
+            case "dotted":
+                legend_line.setAttribute("stroke-dasharray","0.2,5");
+                break;
+            case "dash-dot":
+                legend_line.setAttribute("stroke-dasharray","3,5,0.2,5");
+                break;
+            case "spaced-dot":
+                legend_line.setAttribute("stroke-dasharray","0.2,8");
+                break;
+            case "spaced-dash":
+                legend_line.setAttribute("stroke-dasharray","4,8");
+                break;
+            case "long-dash":
+                legend_line.setAttribute("stroke-dasharray","8,8");
+                break;
+        }
+        legend_grp.appendChild(legend_line);
 
         var legend_text=document.createElementNS("http://www.w3.org/2000/svg","text");
-        legend_text.setAttribute("x",layout.width-layout.padding+2*layout.legend.padding);
+        legend_text.setAttribute("x",layout.width-layout.padding+2*layout.legend.padding+2*layout.legend.font_size);
         legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
         legend_text.setAttribute("text-anchor","start");
         legend_text.setAttribute("font-size",layout.legend.font_size);
@@ -320,10 +347,11 @@ class lineGraph{
                     polyline.setAttribute("stroke-dasharray","8,8");
                     break;
             }
+            svg.appendChild(polyline);
+            svg.appendChild(marker_grp);
         }
 
-        svg.appendChild(polyline);
-        svg.appendChild(marker_grp);
+       
 
 
     }

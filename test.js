@@ -8,7 +8,7 @@ data={
         width:3,
         //fill:"#fff5cc",
         fillstyle:"from-min",
-        style:"solid"
+        style:"dotted"
     },
     marker:{
         size:4,
@@ -17,7 +17,25 @@ data={
         visible:true
     }
 };
-data=[data]
+data1={
+    x:[1,2,3,4,5,6,7,8],
+    y:[20,24,25,17,12,10,13,16],
+    name:"bez",
+    line:{
+        color:"#695FE6",
+        width:3,
+        //fill:"#fff5cc",
+        fillstyle:"from-min",
+        style:"dotted"
+    },
+    marker:{
+        size:4,
+        color:"#695FE6",
+        fill:"#69f56e44",
+        visible:true
+    }
+};
+data=[data,data1]
 
 layout={
     width:800,
