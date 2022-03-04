@@ -40,7 +40,7 @@ data=[data,data1]
 layout={
     width:800,
     height:400,
-    padding:60,
+    padding:80,
     styles:"border-radius:10px",
     bgcolor:'#ffffff',
     title:{text:'Test Graph',font_size:34,font_family:'Montserrat',color:'#000000',font_weight:'bold'},
