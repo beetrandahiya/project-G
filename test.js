@@ -87,4 +87,4 @@ layout={
     }
 };
 
-new lineGraph(document.getElementById("container"),dataset,layout);
+new bezierGraph(document.getElementById("container"),dataset,layout);
