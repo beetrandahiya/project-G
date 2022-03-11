@@ -537,70 +537,64 @@ class bezierGraph{
                 polyline_str+=x_pos+","+y_pos+" ";
 
             }
-            ////////////////////////////////////////////////////////////////////////////////
-        const svgPath = (points, command) => {
-
-            var dval = points.reduce((acc, point, i, a) => i === 0
-            ? `M ${point[0]},${point[1]}`
-            : `${acc} ${command(point, i, a)}`
-            , '')
-
-
-            // build the svg <path> element
-            //console.log(dval);
-           // dval_fill = dval;
-            var path=document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path.setAttribute('d', dval);
-            path.setAttribute('stroke', line_color);
-            path.setAttribute('stroke-width', line_width);
-            path.setAttribute('fill', 'none');
-            path.setAttribute('stroke-linecap', line_linecap);
-            path.setAttribute('stroke-linejoin', line_linejoin);
-
-            
-        }
         
-        
-        const bline = (pointA, pointB) => {
-            const lengthX = pointB[0] - pointA[0]
-            const lengthY = pointB[1] - pointA[1]
-            return {
-            length: Math.sqrt(Math.pow(lengthX, 2) + Math.pow(lengthY, 2)),
-            angle: Math.atan2(lengthY, lengthX)
-            }
-        }
-        
-        const controlPoint = (current, previous, next, reverse) => {
-
-            const p = previous || current
-            const n = next || current
-           
-            const smoothing = line_tension
-           
-            const o = bline(p, n)
-            const angle = o.angle + (reverse ? Math.PI : 0)
-            const length = o.length * smoothing
-            
-            const x = current[0] + Math.cos(angle) * length
-            const y = current[1] + Math.sin(angle) * length
-            return [x, y]
-        }
-        
-        const bezierCommand = (point, i, a) => {
-            // start control point
-            const [cpsX, cpsY] = controlPoint(a[i - 1], a[i - 2], point)
-            // end control point
-            const [cpeX, cpeY] = controlPoint(point, a[i - 1], a[i + 1], true)
-            return `C ${cpsX},${cpsY} ${cpeX},${cpeY} ${point[0]},${point[1]}`
-        }
 
         // Create the svg <path> element
-        svgPath(points, bezierCommand);
-        svg.appendChild(path);
+        
+        svg.appendChild(this.svgPath(points, this.bezierCommand));
 
 
         }
 
         
     }
+        ////////////////////////////////////////////////////////////////////////////////
+        
+        
+    svgPath(points, command) {
+        this.dval = points.reduce((acc, point, i, a) => i === 0
+            ? `M ${point[0]},${point[1]}`
+            : `${acc} ${command(point, i, a)}`
+            , '')
+            if(this.close){
+                this.dval+="Z";
+            }
+
+
+            return this.dval;
+    }
+
+    bezierCommand = (point, i, a) => {
+        // start control point
+        const [cpsX, cpsY] = this.controlPoint(a[i - 1], a[i - 2], point)
+        // end control point
+        const [cpeX, cpeY] = this.controlPoint(point, a[i - 1], a[i + 1], true)
+        return `C ${cpsX},${cpsY} ${cpeX},${cpeY} ${point[0]},${point[1]}`
+    }
+
+    controlPoint = (current, previous, next, reverse) => {
+
+        const p = previous || current
+        const n = next || current
+       
+        const smoothing =this.line_tension;
+       
+        const o = this.bline(p, n)
+        const angle = o.angle + (reverse ? Math.PI : 0)
+        const length = o.length * smoothing
+        
+        const x = current[0] + Math.cos(angle) * length
+        const y = current[1] + Math.sin(angle) * length
+        return [x, y]
+    }
+
+    bline = (pointA, pointB) => {
+        const lengthX = pointB[0] - pointA[0]
+        const lengthY = pointB[1] - pointA[1]
+        return {
+        length: Math.sqrt(Math.pow(lengthX, 2) + Math.pow(lengthY, 2)),
+        angle: Math.atan2(lengthY, lengthX)
+        }
+    }
+
 }
