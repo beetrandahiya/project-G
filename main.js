@@ -334,7 +334,7 @@ class lineGraph{
         makeLegend(this.DOM_container,this.pre_calc,this.graphData,this.layout);
         //making points and lines
         dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
-        dx=this.pre_calc.w_graph/(pre_calc.mostdataset_length-1);
+        dx=this.pre_calc.w_graph/(this.pre_calc.mostdataset_length-1);
     
 
         for(dataindex=0;dataindex<this.graphData.length;dataindex++){
@@ -491,7 +491,7 @@ class bezierGraph{
         makeLegend(this.DOM_container,this.pre_calc,this.graphData,this.layout);
         //making points and lines
         dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
-        dx=this.pre_calc.w_graph/(pre_calc.mostdataset_length-1);
+        dx=this.pre_calc.w_graph/(this.pre_calc.mostdataset_length-1);
 
         for(dataindex=0;dataindex<this.graphData.length;dataindex++){
             var points=[]; //points for calculating bezier curve
