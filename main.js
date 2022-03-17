@@ -697,3 +697,20 @@ class bezierGraph{
         }
 
        
+
+class scatterGraph{
+    constructor(DOM_container,graphData,layout){
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc=graph_precalculate(this.graphData,this.layout);
+        makeGrid(this.DOM_container,this.pre_calc,this.layout);
+        makeTitle(this.DOM_container,this.layout);
+        makeLabels(this.DOM_container,this.pre_calc,this.layout);
+        makeLegend(this.DOM_container,this.pre_calc,this.graphData,this.layout);
+        //making points
+        dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
+        dx=this.pre_calc.w_graph/(this.pre_calc.mostdataset_length-1);
+
+    }
+}

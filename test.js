@@ -43,7 +43,7 @@ layout={
     width:1000,
     height:500,
     padding:80,
-    styles:"border-radius:10px; background-color:#eee; padding:30px;",
+    styles:"border-radius:10px; background-color:#eee; padding:30px; border:1px solid #ccc; ",
     bgcolor:'#ffffff',
     title:{text:'Test Graph',font_size:34,font_family:'Montserrat',color:'#000000',font_weight:'bold'},
 
