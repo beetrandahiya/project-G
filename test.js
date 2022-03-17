@@ -25,16 +25,16 @@ data1={
     name:"chelsea",
     line:{
         color:"#695FE6",
-        width:3,
+        width:0,
         fill:"#695fe655",
         fill_style:"from-zero",
         style:"solid"
     },
     marker:{
-        size:0,
+        size:5,
         color:"#695FE6",
         fill:"#695fe644",
-        visible:true
+        visible:false
     }
 };
 dataset=[data1,data]
@@ -88,4 +88,4 @@ layout={
     }
 };
 
-new bezierGraph(document.getElementById("container"),dataset,layout);
+new scatterGraph(document.getElementById("container"),dataset,layout);

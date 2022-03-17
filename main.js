@@ -267,8 +267,9 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 legend_text.setAttribute("y",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
                 break;
         }
-        legend_line.setAttribute("stroke",graphData[dataindex].line.color);
-        legend_line.setAttribute("stroke-width",graphData[dataindex].line.width);
+        
+        legend_line.setAttribute("stroke",graphData[dataindex].line.color||"#000000");
+        legend_line.setAttribute("stroke-width",graphData[dataindex].line.width||0);
         legend_line.setAttribute("stroke-linecap",graphData[dataindex].line.stroke_linecap||"round");
         legend_line.setAttribute("stroke-linejoin",graphData[dataindex].line.stroke_linejoin||"round");
         // applying line style to legend
@@ -711,6 +712,46 @@ class scatterGraph{
         //making points
         dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
         dx=this.pre_calc.w_graph/(this.pre_calc.mostdataset_length-1);
+
+        for(dataindex=0; dataindex<this.graphData.length;dataindex++){
+
+            var data=this.graphData[dataindex];
+            var data_x=data.x;
+            var data_y=data.y;
+            if(data.visible==false){
+                continue;
+            }
+
+            var marker_size=data.marker.size;
+            var marker_fill=data.marker.fill;
+            var marker_color=data.marker.color;
+            var marker_visible=data.marker.visible||true;
+
+            var marker_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+
+            for(var i=0;i<data_x.length;i++){
+                var y =data_y[i];
+                var x_pos = pad + dx*i;
+                var y_pos = pad + this.pre_calc.h_graph -(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
+
+                //markers
+                if(marker_visible){
+                var circle=document.createElementNS("http://www.w3.org/2000/svg","circle");
+                circle.setAttribute('cx',x_pos);
+                circle.setAttribute('cy',y_pos);
+                circle.setAttribute('r',marker_size);
+                circle.setAttribute('fill',marker_fill);
+                circle.setAttribute('stroke',marker_color);
+                circle.setAttribute('stroke-width',1);
+                marker_grp.appendChild(circle);
+                }
+
+            }
+
+            svg.appendChild(marker_grp);
+
+
+        }
 
     }
 }
