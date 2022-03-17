@@ -5,7 +5,7 @@ data={
     name:"bez",
     line:{
         color:"#69f56e",
-        width:2,
+        width:3,
         //fill:"#fff5cc",
         fillstyle:"from-min",
         style:"dotted",
@@ -27,7 +27,7 @@ data1={
         color:"#695FE6",
         width:3,
         fill:"#695fe655",
-        fill_style:"from-zero",
+        fill_style:"from-max",
         style:"solid"
     },
     marker:{

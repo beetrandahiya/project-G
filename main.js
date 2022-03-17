@@ -495,6 +495,7 @@ class bezierGraph{
 
         for(dataindex=0;dataindex<this.graphData.length;dataindex++){
             var points=[]; //points for calculating bezier curve
+            var pointsfill=[]; //points for filling
             var data = this.graphData[dataindex];
             var data_x = data.x;
             var data_y = data.y;
@@ -514,7 +515,7 @@ class bezierGraph{
             var marker_color=data.marker.color;
             var marker_fill=data.marker.fill;
             var marker_visible=data.marker.visible||false;
-            var polyline_str=" ";
+
             var marker_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
 
             for(i=0;i <data_x.length ; i++){
@@ -534,9 +535,7 @@ class bezierGraph{
             }
 
                 points.push([x_pos,y_pos]);
-                console.log(points);
                 //lines
-                polyline_str+=x_pos+","+y_pos+" ";
 
             }
         
@@ -546,8 +545,7 @@ class bezierGraph{
             path.setAttribute('d',svgPath(points, bezierCommand,line_tension));
             path.setAttribute('stroke',line_color);
             path.setAttribute('stroke-width',line_width);
-            path.setAttribute('fill',line_fill);
-            path.setAttribute('fill-style',line_fillstyle);
+            path.setAttribute('fill','none');
             path.setAttribute('stroke-linecap',line_linecap);
             path.setAttribute('stroke-linejoin',line_linejoin);
             switch(line_style){
@@ -574,11 +572,44 @@ class bezierGraph{
                     break;
             }
 
-            // Create the svg <path> element
+            // Create the fill svg <path> element
+            var fillpath= document.createElementNS("http://www.w3.org/2000/svg","path");
+           switch(line_fillstyle){
+                case "none":
+                    break;
+                case "from-min":
+                    var x1=this.pre_calc.pad;
+                    var y1=this.pre_calc.h-this.pre_calc.pad;
+                    var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                    var y2=this.pre_calc.h-this.pre_calc.pad;
+                    var dval_fill =svgPath(points, bezierCommand,line_tension);
+                    dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
+                    fillpath.setAttribute('d',dval_fill);
+                    break;
+                case "from-max":
+                    var x1=this.pre_calc.pad;
+                    var y1=this.pre_calc.pad;
+                    var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                    var y2=this.pre_calc.pad;
+                    var dval_fill =svgPath(points, bezierCommand,line_tension);
+                    dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
+                    fillpath.setAttribute('d',dval_fill);
+                    break;
+
+            }
+            fillpath.setAttribute('stroke','none');
+            fillpath.setAttribute('stroke-width',0);
+            fillpath.setAttribute('fill',line_fill);
+            fillpath.setAttribute('stroke-linecap',line_linecap);
+            fillpath.setAttribute('stroke-linejoin',line_linejoin);
+            
 
             
+            svg.appendChild(fillpath);
             svg.appendChild(path);
             svg.appendChild(marker_grp);
+
+
 
 
         }
