@@ -480,7 +480,7 @@ class lineGraph{
 
 
 class bezierGraph{
-    constructor(DOM_container,graphData,layouts){
+    constructor(DOM_container,graphData,layout){
         this.DOM_container=DOM_container;
         this.graphData=graphData;
         this.layout=layout;
@@ -533,6 +533,7 @@ class bezierGraph{
             }
 
                 points.push([x_pos,y_pos]);
+                console.log(points);
                 //lines
                 polyline_str+=x_pos+","+y_pos+" ";
 
@@ -540,61 +541,21 @@ class bezierGraph{
         
 
         // Create the svg <path> element
+        var path= document.createElementNS("http://www.w3.org/2000/svg","path");
+        path.setAttribute('d',this.svgPath(points, this.bezierCommand));
+        path.setAttribute('stroke',line_color);
+        path.setAttribute('stroke-width',line_width);
+        path.setAttribute('fill',line_fill);
+
         
-        svg.appendChild(this.svgPath(points, this.bezierCommand));
+        svg.appendChild(path);
 
 
         }
 
         
-    }
-        ////////////////////////////////////////////////////////////////////////////////
-        
-        
-    svgPath(points, command) {
-        this.dval = points.reduce((acc, point, i, a) => i === 0
-            ? `M ${point[0]},${point[1]}`
-            : `${acc} ${command(point, i, a)}`
-            , '')
-            if(this.close){
-                this.dval+="Z";
-            }
-
-
-            return this.dval;
-    }
-
-    bezierCommand = (point, i, a) => {
-        // start control point
-        const [cpsX, cpsY] = this.controlPoint(a[i - 1], a[i - 2], point)
-        // end control point
-        const [cpeX, cpeY] = this.controlPoint(point, a[i - 1], a[i + 1], true)
-        return `C ${cpsX},${cpsY} ${cpeX},${cpeY} ${point[0]},${point[1]}`
-    }
-
-    controlPoint = (current, previous, next, reverse) => {
-
-        const p = previous || current
-        const n = next || current
-       
-        const smoothing =this.line_tension;
-       
-        const o = this.bline(p, n)
-        const angle = o.angle + (reverse ? Math.PI : 0)
-        const length = o.length * smoothing
-        
-        const x = current[0] + Math.cos(angle) * length
-        const y = current[1] + Math.sin(angle) * length
-        return [x, y]
-    }
-
-    bline = (pointA, pointB) => {
-        const lengthX = pointB[0] - pointA[0]
-        const lengthY = pointB[1] - pointA[1]
-        return {
-        length: Math.sqrt(Math.pow(lengthX, 2) + Math.pow(lengthY, 2)),
-        angle: Math.atan2(lengthY, lengthX)
-        }
     }
 
 }
+
+
