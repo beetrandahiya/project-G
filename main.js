@@ -495,6 +495,7 @@ class bezierGraph{
 
         for(dataindex=0;dataindex<this.graphData.length;dataindex++){
             var points=[]; //points for calculating bezier curve
+            var data = this.graphData[dataindex];
             var data_x = data.x;
             var data_y = data.y;
             if(data.visible == false){
@@ -546,11 +547,38 @@ class bezierGraph{
             path.setAttribute('stroke',line_color);
             path.setAttribute('stroke-width',line_width);
             path.setAttribute('fill',line_fill);
+            path.setAttribute('fill-style',line_fillstyle);
+            path.setAttribute('stroke-linecap',line_linecap);
+            path.setAttribute('stroke-linejoin',line_linejoin);
+            switch(line_style){
+                case "solid":
+                    path.setAttribute("stroke-dasharray","none");
+                    break;
+                case "dashed":
+                    path.setAttribute("stroke-dasharray","3,5");
+                    break;
+                case "dotted":
+                    path.setAttribute("stroke-dasharray","0.2,5");
+                    break;
+                case "dash-dot":
+                    path.setAttribute("stroke-dasharray","3,5,0.2,5");
+                    break;
+                case "spaced-dot":
+                    path.setAttribute("stroke-dasharray","0.2,8");
+                    break;
+                case "spaced-dash":
+                    path.setAttribute("stroke-dasharray","4,8");
+                    break;
+                case "long-dash":
+                    path.setAttribute("stroke-dasharray","8,8");
+                    break;
+            }
 
             // Create the svg <path> element
 
             
             svg.appendChild(path);
+            svg.appendChild(marker_grp);
 
 
         }

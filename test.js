@@ -5,10 +5,11 @@ data={
     name:"bez",
     line:{
         color:"#69f56e",
-        width:3,
+        width:2,
         //fill:"#fff5cc",
         fillstyle:"from-min",
-        style:"dotted"
+        style:"dotted",
+        tension:0.2
     },
     marker:{
         size:4,
@@ -39,8 +40,8 @@ data1={
 dataset=[data1,data]
 
 layout={
-    width:800,
-    height:400,
+    width:1000,
+    height:500,
     padding:80,
     styles:"border-radius:10px; background-color:#eee; padding:30px;",
     bgcolor:'#ffffff',
