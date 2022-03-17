@@ -540,15 +540,17 @@ class bezierGraph{
             }
         
 
-        // Create the svg <path> element
-        var path= document.createElementNS("http://www.w3.org/2000/svg","path");
-        path.setAttribute('d',this.svgPath(points, this.bezierCommand));
-        path.setAttribute('stroke',line_color);
-        path.setAttribute('stroke-width',line_width);
-        path.setAttribute('fill',line_fill);
+            // Create the svg <path> element
+            var path= document.createElementNS("http://www.w3.org/2000/svg","path");
+            path.setAttribute('d',svgPath(points, bezierCommand));
+            path.setAttribute('stroke',line_color);
+            path.setAttribute('stroke-width',line_width);
+            path.setAttribute('fill',line_fill);
 
-        
-        svg.appendChild(path);
+            // Create the svg <path> element
+
+            
+            svg.appendChild(path);
 
 
         }
@@ -559,3 +561,51 @@ class bezierGraph{
 }
 
 
+ ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+        const svgPath = (points, command) => {
+
+            dval = points.reduce((acc, point, i, a) => i === 0
+            ? `M ${point[0]},${point[1]}`
+            : `${acc} ${command(point, i, a)}`
+            , '')
+
+            return dval
+            
+        }
+        
+        
+        const bline = (pointA, pointB) => {
+            const lengthX = pointB[0] - pointA[0]
+            const lengthY = pointB[1] - pointA[1]
+            return {
+            length: Math.sqrt(Math.pow(lengthX, 2) + Math.pow(lengthY, 2)),
+            angle: Math.atan2(lengthY, lengthX)
+            }
+        }
+        
+        const controlPoint = (current, previous, next, reverse) => {
+
+            const p = previous || current
+            const n = next || current
+           
+            const smoothing = 0.2
+           
+            const o = bline(p, n)
+            const angle = o.angle + (reverse ? Math.PI : 0)
+            const length = o.length * smoothing
+            
+            const x = current[0] + Math.cos(angle) * length
+            const y = current[1] + Math.sin(angle) * length
+            return [x, y]
+        }
+        
+        const bezierCommand = (point, i, a) => {
+            // start control point
+            const [cpsX, cpsY] = controlPoint(a[i - 1], a[i - 2], point)
+            // end control point
+            const [cpeX, cpeY] = controlPoint(point, a[i - 1], a[i + 1], true)
+            return `C ${cpsX},${cpsY} ${cpeX},${cpeY} ${point[0]},${point[1]}`
+        }
+
+       
