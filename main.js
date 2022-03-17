@@ -595,6 +595,35 @@ class bezierGraph{
                     dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
                     fillpath.setAttribute('d',dval_fill);
                     break;
+                case "from-zero":
+                    if(this.pre_calc.y_min>0){
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.h-this.pre_calc.pad;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.pad;
+                        var dval_fill =svgPath(points, bezierCommand,line_tension);
+                        dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
+                        fillpath.setAttribute('d',dval_fill);
+                    }
+                    else if(this.pre_calc.y_max<0){
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.h-this.pre_calc.pad;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.h-this.pre_calc.pad;
+                        var dval_fill =svgPath(points, bezierCommand,line_tension);
+                        dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
+                        fillpath.setAttribute('d',dval_fill);
+                    }
+                    else{
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.zeroval_coord;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.zeroval_coord;
+                        var dval_fill =svgPath(points, bezierCommand,line_tension);
+                        dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
+                        fillpath.setAttribute('d',dval_fill);
+                    }
+
 
             }
             fillpath.setAttribute('stroke','none');

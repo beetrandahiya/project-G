@@ -6,8 +6,8 @@ data={
     line:{
         color:"#69f56e",
         width:3,
-        //fill:"#fff5cc",
-        fillstyle:"from-min",
+        fill:"",
+        fill_style:"from-min",
         style:"dotted",
         tension:0.2
     },
@@ -27,7 +27,7 @@ data1={
         color:"#695FE6",
         width:3,
         fill:"#695fe655",
-        fill_style:"from-max",
+        fill_style:"from-zero",
         style:"solid"
     },
     marker:{
