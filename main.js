@@ -542,7 +542,7 @@ class bezierGraph{
 
             // Create the svg <path> element
             var path= document.createElementNS("http://www.w3.org/2000/svg","path");
-            path.setAttribute('d',svgPath(points, bezierCommand));
+            path.setAttribute('d',svgPath(points, bezierCommand,line_tension));
             path.setAttribute('stroke',line_color);
             path.setAttribute('stroke-width',line_width);
             path.setAttribute('fill',line_fill);
@@ -563,11 +563,11 @@ class bezierGraph{
 
  ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-        const svgPath = (points, command) => {
+        const svgPath = (points, command, line_tension) => {
 
             dval = points.reduce((acc, point, i, a) => i === 0
             ? `M ${point[0]},${point[1]}`
-            : `${acc} ${command(point, i, a)}`
+            : `${acc} ${command(point, i, a, line_tension)}`
             , '')
 
             return dval
@@ -584,12 +584,12 @@ class bezierGraph{
             }
         }
         
-        const controlPoint = (current, previous, next, reverse) => {
+        const controlPoint = (current, previous, next, reverse,line_tension) => {
 
             const p = previous || current
             const n = next || current
            
-            const smoothing = 0.2
+            const smoothing = line_tension
            
             const o = bline(p, n)
             const angle = o.angle + (reverse ? Math.PI : 0)
@@ -600,11 +600,11 @@ class bezierGraph{
             return [x, y]
         }
         
-        const bezierCommand = (point, i, a) => {
+        const bezierCommand = (point, i, a,line_tension) => {
             // start control point
-            const [cpsX, cpsY] = controlPoint(a[i - 1], a[i - 2], point)
+            const [cpsX, cpsY] = controlPoint(a[i - 1], a[i - 2], point,0,line_tension)
             // end control point
-            const [cpeX, cpeY] = controlPoint(point, a[i - 1], a[i + 1], true)
+            const [cpeX, cpeY] = controlPoint(point, a[i - 1], a[i + 1], true,line_tension)
             return `C ${cpsX},${cpsY} ${cpeX},${cpeY} ${point[0]},${point[1]}`
         }
 
