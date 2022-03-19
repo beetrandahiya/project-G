@@ -50,7 +50,7 @@ data2={
 }
 data3={
     x:[1,2,3,4,5,6,7,8],
-    y:[10,24,35,1,-9,14,6,23],
+    y:[10,24,35,21,-9,14,6,23],
     name:"bar",
     bar:{
         fill:"#f5f9",
@@ -58,7 +58,8 @@ data3={
         stroke_width:2,
         stroke_style:"dashed",
         width:20,
-        border_radius:10
+        border_radius:10,
+        fill_style:"from-max",
     }
 }
 datasetbar=[data2,data3]
