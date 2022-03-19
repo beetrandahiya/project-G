@@ -42,10 +42,10 @@ data2={
     y:[20,24,25,17,7,4,6,13],
     name:"bar",
     bar:{
-        fill:"#695f6e",
+        fill:"#695fe6",
         stroke:"#000",
         stroke_width:0,
-        border_radius:5,
+        border_radius:2,
         fill_style:"from-zero",
     }
 }
@@ -55,7 +55,7 @@ data3={
     name:"bar",
     bar:{
         fill:"#f5f9",
-        stroke:"#000",
+        stroke:"#f5f",
         stroke_width:2,
         stroke_style:"dashed",
         width:20,
@@ -166,6 +166,9 @@ layoutbar={
 };
 
 new scatterGraph(document.getElementById("container"),dataset,layout);
-new lineGraph(document.getElementById("container1"),dataset,layout);
 new bezierGraph(document.getElementById("container1"),dataset,layout);
 new barGraph(document.getElementById("container2"),datasetbar,layoutbar);
+
+
+
+  

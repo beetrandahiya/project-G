@@ -15,8 +15,8 @@ function graph_precalculate(graphData,layout){
         var data_y = data.y;
         
         if (dataindex == 0) {
-            y_max = Math.max(...data_y);
-            y_min = Math.min(...data_y);
+            y_max = 20//Math.max(...data_y);
+            y_min = 0 //Math.min(...data_y);
             mostdataset_index = dataindex;
             mostdataset_length = data_y.length;
             maxdatasetval_index = 0;
@@ -89,9 +89,9 @@ function makeGrid(DOM_container,pre_calc,layout){
     y_axes_stroke_dasharray=layout.yaxes.style;
     y_axes_domain=layout.yaxes.domain;
 
-    x_axes_stroke_width=layout.xaxis.stroke_width;
-    x_axes_stroke_color=layout.xaxis.stroke;
-    x_axes_stroke_dasharray=layout.xaxis.style;
+    x_axes_stroke_width=layout.xaxes.stroke_width;
+    x_axes_stroke_color=layout.xaxes.stroke;
+    x_axes_stroke_dasharray=layout.xaxes.style;
 
 
     if (y_axes_domain != "auto") {
@@ -101,6 +101,7 @@ function makeGrid(DOM_container,pre_calc,layout){
     
     //y axes
     yaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.yaxes.visible){
     for(i=0;i<layout.yaxes.no_parts;i++){
         line=document.createElementNS("http://www.w3.org/2000/svg","line");
         line.setAttribute("x1",pad);
@@ -123,9 +124,10 @@ function makeGrid(DOM_container,pre_calc,layout){
 
         yaxes_grp.appendChild(line);
     }
-
+    }
     //x axes
     xaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.xaxes.visible){
     for(i=0;i<  pre_calc.mostdataset_length;i++){
         line=document.createElementNS("http://www.w3.org/2000/svg","line");
         line.setAttribute("x1",pad+dx*i);
@@ -147,7 +149,7 @@ function makeGrid(DOM_container,pre_calc,layout){
         }     
 
         xaxes_grp.appendChild(line);
-    }
+    }}
 
     //adding the grid to the main svg
     svg.appendChild(yaxes_grp);
@@ -174,9 +176,9 @@ function makeGridBar(DOM_container,pre_calc,layout){
     y_axes_stroke_dasharray=layout.yaxes.style;
     y_axes_domain=layout.yaxes.domain;
 
-    x_axes_stroke_width=layout.xaxis.stroke_width;
-    x_axes_stroke_color=layout.xaxis.stroke;
-    x_axes_stroke_dasharray=layout.xaxis.style;
+    x_axes_stroke_width=layout.xaxes.stroke_width;
+    x_axes_stroke_color=layout.xaxes.stroke;
+    x_axes_stroke_dasharray=layout.xaxes.style;
 
 
     if (y_axes_domain != "auto") {
@@ -186,6 +188,7 @@ function makeGridBar(DOM_container,pre_calc,layout){
     
     //y axes
     yaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.yaxes.visible){
     for(i=0;i<layout.yaxes.no_parts;i++){
         line=document.createElementNS("http://www.w3.org/2000/svg","line");
         line.setAttribute("x1",pad);
@@ -207,31 +210,33 @@ function makeGridBar(DOM_container,pre_calc,layout){
         }
 
         yaxes_grp.appendChild(line);
-    }
+    }}
 
     //x axes
     xaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
-    for(i=0;i<=pre_calc.mostdataset_length;i++){
-        line=document.createElementNS("http://www.w3.org/2000/svg","line");
-        line.setAttribute("x1",pad+dx*i);
-        line.setAttribute("y1",pad);
-        line.setAttribute("x2",dx*i+pad);
-        line.setAttribute("y2",pad+pre_calc.h_graph);
-        line.setAttribute("stroke",x_axes_stroke_color);
-        line.setAttribute("stroke-width",x_axes_stroke_width);
-        switch(x_axes_stroke_dasharray){
-            case "solid":
-                line.setAttribute("stroke-dasharray","none");
-                break;
-            case "dashed":
-                line.setAttribute("stroke-dasharray","4,5");
-                break;
-            case "dotted":
-                line.setAttribute("stroke-dasharray","1,3");
-                break;
-        }     
+    if(layout.xaxes.visible){     
+        for(i=0;i<=pre_calc.mostdataset_length;i++){
+            line=document.createElementNS("http://www.w3.org/2000/svg","line");
+            line.setAttribute("x1",pad+dx*i);
+            line.setAttribute("y1",pad);
+            line.setAttribute("x2",dx*i+pad);
+            line.setAttribute("y2",pad+pre_calc.h_graph);
+            line.setAttribute("stroke",x_axes_stroke_color);
+            line.setAttribute("stroke-width",x_axes_stroke_width);
+            switch(x_axes_stroke_dasharray){
+                case "solid":
+                    line.setAttribute("stroke-dasharray","none");
+                    break;
+                case "dashed":
+                    line.setAttribute("stroke-dasharray","4,5");
+                    break;
+                case "dotted":
+                    line.setAttribute("stroke-dasharray","1,3");
+                    break;
+            }     
 
-        xaxes_grp.appendChild(line);
+            xaxes_grp.appendChild(line);
+        }
     }
 
     //adding the grid to the main svg
@@ -260,6 +265,7 @@ function makeLabels(DOM_container,pre_calc,layout){
     //making the labels
     ylabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
     xlabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.ylabels.visible){
     for(i=0;i<layout.yaxes.no_parts;i++){
         var ylbl= document.createElementNS("http://www.w3.org/2000/svg","text");
         ylbl.setAttribute("x",pad-5);
@@ -273,8 +279,9 @@ function makeLabels(DOM_container,pre_calc,layout){
         ylbl.setAttribute("anti-alias","true");
         ylbl.innerHTML=pre_calc.yaxes_labels[i];
         ylabel_grp.appendChild(ylbl);
-    }
+    }}
 
+    if(layout.xlabels.visible){
     for(i=0;i<pre_calc.mostdataset_length;i++){
         var xlbl= document.createElementNS("http://www.w3.org/2000/svg","text");
         xlbl.setAttribute("x",dx*i+pad);
@@ -287,7 +294,7 @@ function makeLabels(DOM_container,pre_calc,layout){
         xlbl.setAttribute("anti-alias","true");
         xlbl.innerHTML=layout.xlabels.labels[i];
         xlabel_grp.appendChild(xlbl);
-    }
+    }}
 
     svg.appendChild(ylabel_grp);
     svg.appendChild(xlabel_grp);
@@ -332,6 +339,7 @@ function makeLabelsBar(DOM_container,pre_calc,layout){
 
 function makeLegend(DOM_container,pre_calc,graphData,layout){
     //making the legend
+    if(layout.legend.visible){
     legend_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
     for(dataindex=0;dataindex<graphData.length;dataindex++){
         var legend_line=document.createElementNS("http://www.w3.org/2000/svg","line");
@@ -439,7 +447,7 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
         legend_grp.appendChild(legend_text);
     }
     svg.appendChild(legend_grp);
-}
+}}
 
 
 ////////////////////////////////////////////////////////
