@@ -42,9 +42,10 @@ data2={
     y:[20,24,25,17,7,4,6,13],
     name:"bar",
     bar:{
-        fill:"#69f56e",
+        fill:"#695f6e",
         stroke:"#000",
         stroke_width:0,
+        border_radius:5,
     }
 }
 data3={
@@ -52,10 +53,12 @@ data3={
     y:[10,24,35,1,9,14,6,23],
     name:"bar",
     bar:{
-        fill:"#f569",
+        fill:"#f5f9",
         stroke:"#000",
-        stroke_width:0,
-        width:20
+        stroke_width:2,
+        stroke_style:"dashed",
+        width:20,
+        border_radius:10
     }
 }
 datasetbar=[data2,data3]
@@ -130,7 +133,7 @@ layoutbar={
     yaxes:{
         title:{text:'',fontfamily:"Montserrat"},
         no_parts:5,
-        domain:[0,40],
+        domain:[-10,40],
         style: "solid",
         stroke:'#000000',
         stroke_width:"0.1px",

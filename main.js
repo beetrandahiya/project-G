@@ -907,8 +907,10 @@ class barGraph{
             var bar_fill=data.bar.fill;
             var bar_stroke=data.bar.stroke||"none";
             var bar_stroke_width=data.bar.stroke_width||0;
+            var bar_stroke_style=data.bar.stroke_style||"solid";
             var bar_visible=data.bar.visible||true;
             var bar_border_radius=data.bar.border_radius||0;
+            var bar_fill_style=data.bar.fill_style||"from-zero";
             var bar_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
 
             for(var i=0;i<data_x.length;i++){
@@ -927,6 +929,32 @@ class barGraph{
                     rect.setAttribute('fill',bar_fill);
                     rect.setAttribute('stroke',bar_stroke);
                     rect.setAttribute('stroke-width',bar_stroke_width);
+                    switch(bar_stroke_style){
+                        case "solid":
+                            rect.setAttribute("stroke-dasharray","none");
+                            break;
+                        case "dashed":
+                            rect.setAttribute("stroke-linecap","round");
+                            rect.setAttribute("stroke-dasharray","3,5");
+                            break;
+                        case "dotted":
+                            rect.setAttribute("stroke-linecap","round");
+                            rect.setAttribute("stroke-dasharray","0.2,5");
+                            break;
+                        case "dash-dot":
+                            rect.setAttribute("stroke-dasharray","3,5,0.2,5");
+                            break;
+                        case "spaced-dot":
+                            rect.setAttribute("stroke-dasharray","0.2,8");
+                            break;
+                        case "spaced-dash":
+                            rect.setAttribute("stroke-dasharray","4,8");
+                            break;
+                        case "long-dash":
+                            rect.setAttribute("stroke-dasharray","8,8");
+                            break;
+                    }
+        
                     rect.setAttribute('rx',bar_border_radius);
                     rect.setAttribute('ry',bar_border_radius);
                     bar_grp.appendChild(rect);
