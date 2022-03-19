@@ -74,7 +74,7 @@ layout={
     bgcolor:'#ffffff',
     title:{text:'Test Graph',font_size:34,font_family:'Montserrat',color:'#000000',font_weight:'bold'},
 
-    xaxis:{
+    xaxes:{
         title:{text:'X-axis',fontfamily:"Montserrat"},
         visible:false,
         stroke_width:"0.1px",
@@ -124,7 +124,7 @@ layoutbar={
     bgcolor:'#ffffff',
     title:{text:'Test Graph',font_size:34,font_family:'Montserrat',color:'#000000',font_weight:'bold'},
 
-    xaxis:{
+    xaxes:{
         title:{text:'X-axis',fontfamily:"Montserrat"},
         visible:false,
         stroke_width:"0.1px",

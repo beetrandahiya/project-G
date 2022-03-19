@@ -15,8 +15,8 @@ function graph_precalculate(graphData,layout){
         var data_y = data.y;
         
         if (dataindex == 0) {
-            y_max = 20//Math.max(...data_y);
-            y_min = 0 //Math.min(...data_y);
+            y_max = Math.max(...data_y);
+            y_min = Math.min(...data_y);
             mostdataset_index = dataindex;
             mostdataset_length = data_y.length;
             maxdatasetval_index = 0;
