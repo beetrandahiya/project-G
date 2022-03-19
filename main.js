@@ -167,7 +167,7 @@ function makeGridBar(DOM_container,pre_calc,layout){
 
     //making the grid
     dy=pre_calc.h_graph/(layout.yaxes.no_parts-1);
-    dx=pre_calc.w_graph/(pre_calc.mostdataset_length-1);
+    dx=pre_calc.w_graph/(pre_calc.mostdataset_length);
     
     y_axes_stroke_width=layout.yaxes.stroke_width;
     y_axes_stroke_color=layout.yaxes.stroke;
@@ -211,7 +211,7 @@ function makeGridBar(DOM_container,pre_calc,layout){
 
     //x axes
     xaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
-    for(i=0;i<  pre_calc.mostdataset_length;i++){
+    for(i=0;i<=pre_calc.mostdataset_length;i++){
         line=document.createElementNS("http://www.w3.org/2000/svg","line");
         line.setAttribute("x1",pad+dx*i);
         line.setAttribute("y1",pad);
@@ -278,6 +278,43 @@ function makeLabels(DOM_container,pre_calc,layout){
     for(i=0;i<pre_calc.mostdataset_length;i++){
         var xlbl= document.createElementNS("http://www.w3.org/2000/svg","text");
         xlbl.setAttribute("x",dx*i+pad);
+        xlbl.setAttribute("y",pre_calc.h-pad+layout.xlabels.font_size);
+        xlbl.setAttribute("text-anchor","middle");
+        xlbl.setAttribute("font-size",layout.xlabels.font_size);
+        xlbl.setAttribute("font-family",layout.xlabels.font_family);
+        xlbl.setAttribute("font-weight",layout.xlabels.font_weight);
+        xlbl.setAttribute("fill",layout.xlabels.color);
+        xlbl.setAttribute("anti-alias","true");
+        xlbl.innerHTML=layout.xlabels.labels[i];
+        xlabel_grp.appendChild(xlbl);
+    }
+
+    svg.appendChild(ylabel_grp);
+    svg.appendChild(xlabel_grp);
+}
+
+function makeLabelsBar(DOM_container,pre_calc,layout){
+    //making the labels
+    ylabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    xlabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        var ylbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        ylbl.setAttribute("x",pad-5);
+        ylbl.setAttribute("y",pre_calc.h-(dy*i)-pad);
+        ylbl.setAttribute("text-anchor","end");
+        ylbl.setAttribute("font-size",layout.ylabels.font_size);
+        ylbl.setAttribute("font-family",layout.ylabels.font_family);
+        ylbl.setAttribute("font-weight",layout.ylabels.font_weight);
+        ylbl.setAttribute("fill",layout.ylabels.color);
+        ylbl.setAttribute("alignment-baseline","middle");
+        ylbl.setAttribute("anti-alias","true");
+        ylbl.innerHTML=pre_calc.yaxes_labels[i];
+        ylabel_grp.appendChild(ylbl);
+    }
+
+    for(i=0;i<pre_calc.mostdataset_length;i++){
+        var xlbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        xlbl.setAttribute("x",dx*i+pad+dx/2);
         xlbl.setAttribute("y",pre_calc.h-pad+layout.xlabels.font_size);
         xlbl.setAttribute("text-anchor","middle");
         xlbl.setAttribute("font-size",layout.xlabels.font_size);
@@ -851,7 +888,7 @@ class barGraph{
         this.pre_calc=graph_precalculate(this.graphData,this.layout);
         makeGridBar(this.DOM_container,this.pre_calc,this.layout);
         makeTitle(this.DOM_container,this.layout);
-        makeLabels(this.DOM_container,this.pre_calc,this.layout);
+        makeLabelsBar(this.DOM_container,this.pre_calc,this.layout);
       //  makeLegend(this.DOM_container,this.pre_calc,this.graphData,this.layout);
         //making bars
         dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
