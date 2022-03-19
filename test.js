@@ -46,7 +46,7 @@ data2={
         stroke:"#000",
         stroke_width:0,
         border_radius:5,
-        fill_style:"from-min",
+        fill_style:"from-zero",
     }
 }
 data3={
@@ -59,8 +59,8 @@ data3={
         stroke_width:2,
         stroke_style:"dashed",
         width:20,
-        border_radius:10,
-        fill_style:"from-min",
+        border_radius:1,
+        fill_style:"from-zero",
     }
 }
 datasetbar=[data2,data3]
@@ -167,4 +167,5 @@ layoutbar={
 
 new scatterGraph(document.getElementById("container"),dataset,layout);
 new lineGraph(document.getElementById("container1"),dataset,layout);
+new bezierGraph(document.getElementById("container1"),dataset,layout);
 new barGraph(document.getElementById("container2"),datasetbar,layoutbar);
