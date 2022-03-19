@@ -922,11 +922,35 @@ class barGraph{
                 //bars
                 if(bar_visible){
                     var rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
-                    rect.setAttribute('x',x_pos);
-                    rect.setAttribute('y',y_pos);
-                    rect.setAttribute('width',wp);
-                    rect.setAttribute('height',h_graph-y_pos+pad);
-                    rect.setAttribute('fill',bar_fill);
+                    switch(bar_fill_style){
+                        case "from-min":
+                            rect.setAttribute('x',x_pos);
+                            rect.setAttribute('y',y_pos);
+                            rect.setAttribute('width',wp);
+                            rect.setAttribute('height',h_graph-y_pos+pad);
+                            break;
+                        case "from-zero":
+                            if(y>0){
+                                rect.setAttribute('x',x_pos);
+                                rect.setAttribute('y',y_pos);
+                                rect.setAttribute('width',wp);
+                                rect.setAttribute('height',this.pre_calc.zeroval_coord-y_pos);}
+                            else{
+                                rect.setAttribute('x',x_pos);
+                                rect.setAttribute('y',this.pre_calc.zeroval_coord);
+                                rect.setAttribute('width',wp);
+                                rect.setAttribute('height',y_pos-this.pre_calc.zeroval_coord);
+                            }
+                            break;
+                        case "from-max":
+                            rect.setAttribute('x',x_pos);
+                            rect.setAttribute('y',pad);
+                            rect.setAttribute('width',wp);
+                            rect.setAttribute('height',h_graph);
+                            break;
+                    }
+
+                   rect.setAttribute('fill',bar_fill);
                     rect.setAttribute('stroke',bar_stroke);
                     rect.setAttribute('stroke-width',bar_stroke_width);
                     switch(bar_stroke_style){
