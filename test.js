@@ -25,7 +25,7 @@ data1={
     name:"chelsea",
     line:{
         color:"#695FE6",
-        width:0,
+        width:3,
         fill:"#695fe655",
         fill_style:"from-zero",
         style:"solid"

@@ -425,7 +425,7 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
 
         
 
-         legend_text.setAttribute("text-anchor","start");
+        legend_text.setAttribute("text-anchor","start");
         legend_text.setAttribute("font-size",layout.legend.font_size);
         legend_text.setAttribute("font-family",layout.legend.font_family);
         legend_text.setAttribute("font-weight",layout.legend.font_weight);
@@ -434,8 +434,8 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
         legend_text.setAttribute("anti-alias","true");
         legend_text.innerHTML=graphData[dataindex].name;
 
-        legend_grp.appendChild(legend_marker);
         legend_grp.appendChild(legend_line);
+        legend_grp.appendChild(legend_marker);
         legend_grp.appendChild(legend_text);
     }
     svg.appendChild(legend_grp);
