@@ -47,7 +47,18 @@ data2={
         stroke_width:0,
     }
 }
-datasetbar=[data2]
+data3={
+    x:[1,2,3,4,5,6,7,8],
+    y:[10,24,35,1,9,14,6,23],
+    name:"bar",
+    bar:{
+        fill:"#f569",
+        stroke:"#000",
+        stroke_width:0,
+        width:20
+    }
+}
+datasetbar=[data2,data3]
 dataset=[data1,data]
 
 layout={
@@ -99,6 +110,56 @@ layout={
     }
 };
 
+
+layoutbar={
+    width:1000,
+    height:500,
+    padding:80,
+    styles:"border-radius:10px; background-color:#fafafa; padding:30px; border:1px solid #ccc; ",
+    bgcolor:'#ffffff',
+    title:{text:'Test Graph',font_size:34,font_family:'Montserrat',color:'#000000',font_weight:'bold'},
+
+    xaxis:{
+        title:{text:'X-axis',fontfamily:"Montserrat"},
+        visible:false,
+        stroke_width:"0.1px",
+        stroke:"#000000",
+        style:"solid"
+    }
+    ,
+    yaxes:{
+        title:{text:'',fontfamily:"Montserrat"},
+        no_parts:5,
+        domain:[0,40],
+        style: "solid",
+        stroke:'#000000',
+        stroke_width:"0.1px",
+        visible:true
+    },
+
+    xlabels:{
+        labels:['1','2','3','4','5','6','7','8','9','10'],
+        visible:false,
+        font_family:"Montserrat",
+        font_size:12,
+        font_weight:"bold",
+    },
+    ylabels:{
+        visible:true,
+        font_family:"Montserrat",
+        font_size:12,
+        font_weight:"bold",
+    },
+    legend:{
+        visible:true,
+        position:"top-right",
+        font_family:"Montserrat",
+        font_size:12,
+        font_weight:"bold",
+        padding:5,
+    }
+};
+
 new scatterGraph(document.getElementById("container"),dataset,layout);
 new lineGraph(document.getElementById("container1"),dataset,layout);
-new barGraph(document.getElementById("container2"),datasetbar,layout);
+new barGraph(document.getElementById("container2"),datasetbar,layoutbar);

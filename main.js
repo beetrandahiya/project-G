@@ -923,7 +923,7 @@ class barGraph{
                     rect.setAttribute('x',x_pos);
                     rect.setAttribute('y',y_pos);
                     rect.setAttribute('width',wp);
-                    rect.setAttribute('height',h_graph-y_pos);
+                    rect.setAttribute('height',h_graph-y_pos+pad);
                     rect.setAttribute('fill',bar_fill);
                     rect.setAttribute('stroke',bar_stroke);
                     rect.setAttribute('stroke-width',bar_stroke_width);
