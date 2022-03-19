@@ -46,6 +46,7 @@ data2={
         stroke:"#000",
         stroke_width:0,
         border_radius:5,
+        fill_style:"from-min",
     }
 }
 data3={
@@ -59,7 +60,7 @@ data3={
         stroke_style:"dashed",
         width:20,
         border_radius:10,
-        fill_style:"from-max",
+        fill_style:"from-min",
     }
 }
 datasetbar=[data2,data3]
