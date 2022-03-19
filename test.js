@@ -20,8 +20,8 @@ data={
 };
 
 data1={
-    x:[1,2,3,4,5,6,7,8,9],
-    y:[20,24,25,17,-7,-4,6,13,16],
+    x:[1,2,3,4,5,6,7,8],
+    y:[20,24,25,17,-7,-4,6,13],
     name:"chelsea",
     line:{
         color:"#695FE6",
@@ -37,13 +37,24 @@ data1={
         visible:false
     }
 };
+data2={
+    x:[1,2,3,4,5,6,7,8],
+    y:[20,24,25,17,7,4,6,13],
+    name:"bar",
+    bar:{
+        fill:"#69f56e",
+        stroke:"#000",
+        stroke_width:0,
+    }
+}
+datasetbar=[data2]
 dataset=[data1,data]
 
 layout={
     width:1000,
     height:500,
     padding:80,
-    styles:"border-radius:10px; background-color:#eee; padding:30px; border:1px solid #ccc; ",
+    styles:"border-radius:10px; background-color:#fafafa; padding:30px; border:1px solid #ccc; ",
     bgcolor:'#ffffff',
     title:{text:'Test Graph',font_size:34,font_family:'Montserrat',color:'#000000',font_weight:'bold'},
 
@@ -89,3 +100,5 @@ layout={
 };
 
 new scatterGraph(document.getElementById("container"),dataset,layout);
+new lineGraph(document.getElementById("container1"),dataset,layout);
+new barGraph(document.getElementById("container2"),datasetbar,layout);

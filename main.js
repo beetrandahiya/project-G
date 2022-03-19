@@ -156,6 +156,91 @@ function makeGrid(DOM_container,pre_calc,layout){
 
 }
 
+function makeGridBar(DOM_container,pre_calc,layout){
+    //making the main svg
+    svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("width",pre_calc.w);
+    svg.setAttribute("height",pre_calc.h);
+    svg.setAttribute("viewBox","0 0 "+pre_calc.w+" "+pre_calc.h);
+    svg.setAttribute("style",layout.styles)
+    DOM_container.appendChild(svg);
+
+    //making the grid
+    dy=pre_calc.h_graph/(layout.yaxes.no_parts-1);
+    dx=pre_calc.w_graph/(pre_calc.mostdataset_length-1);
+    
+    y_axes_stroke_width=layout.yaxes.stroke_width;
+    y_axes_stroke_color=layout.yaxes.stroke;
+    y_axes_stroke_dasharray=layout.yaxes.style;
+    y_axes_domain=layout.yaxes.domain;
+
+    x_axes_stroke_width=layout.xaxis.stroke_width;
+    x_axes_stroke_color=layout.xaxis.stroke;
+    x_axes_stroke_dasharray=layout.xaxis.style;
+
+
+    if (y_axes_domain != "auto") {
+        y_min = y_axes_domain[0]; //here we set the domain of y axis
+        y_max = y_axes_domain[1];
+    }
+    
+    //y axes
+    yaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",pad);
+        line.setAttribute("y1",dy*i+pad);
+        line.setAttribute("x2",pad+pre_calc.w_graph);
+        line.setAttribute("y2",dy*i+pad);
+        line.setAttribute("stroke",y_axes_stroke_color);
+        line.setAttribute("stroke-width",y_axes_stroke_width);
+        switch(y_axes_stroke_dasharray){
+            case "solid":
+                line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                line.setAttribute("stroke-dasharray","3,5");
+                break;
+            case "dotted":
+                line.setAttribute("stroke-dasharray","1,3");
+                break;
+        }
+
+        yaxes_grp.appendChild(line);
+    }
+
+    //x axes
+    xaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    for(i=0;i<  pre_calc.mostdataset_length;i++){
+        line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",pad+dx*i);
+        line.setAttribute("y1",pad);
+        line.setAttribute("x2",dx*i+pad);
+        line.setAttribute("y2",pad+pre_calc.h_graph);
+        line.setAttribute("stroke",x_axes_stroke_color);
+        line.setAttribute("stroke-width",x_axes_stroke_width);
+        switch(x_axes_stroke_dasharray){
+            case "solid":
+                line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                line.setAttribute("stroke-dasharray","4,5");
+                break;
+            case "dotted":
+                line.setAttribute("stroke-dasharray","1,3");
+                break;
+        }     
+
+        xaxes_grp.appendChild(line);
+    }
+
+    //adding the grid to the main svg
+    svg.appendChild(yaxes_grp);
+    svg.appendChild(xaxes_grp);
+
+
+}
+
 function makeTitle(DOM_container,layout){
     //making the title
     title=document.createElementNS("http://www.w3.org/2000/svg","text");
@@ -753,5 +838,69 @@ class scatterGraph{
 
         }
 
+    }
+}
+
+
+
+class barGraph{
+    constructor(DOM_container,graphData,layout){
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc=graph_precalculate(this.graphData,this.layout);
+        makeGridBar(this.DOM_container,this.pre_calc,this.layout);
+        makeTitle(this.DOM_container,this.layout);
+        makeLabels(this.DOM_container,this.pre_calc,this.layout);
+      //  makeLegend(this.DOM_container,this.pre_calc,this.graphData,this.layout);
+        //making bars
+        dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
+        dx=this.pre_calc.w_graph/(this.pre_calc.mostdataset_length);
+
+        for(dataindex=0; dataindex<this.graphData.length;dataindex++){
+
+            var data=this.graphData[dataindex];
+            var data_x=data.x;
+            var data_y=data.y;
+            if(data.visible==false){
+                continue;
+            }
+
+            var bar_width=data.bar.width || 50; //width percentage
+            var bar_fill=data.bar.fill;
+            var bar_stroke=data.bar.stroke||"none";
+            var bar_stroke_width=data.bar.stroke_width||0;
+            var bar_visible=data.bar.visible||true;
+            var bar_border_radius=data.bar.border_radius||0;
+            var bar_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+
+            for(var i=0;i<data_x.length;i++){
+                var y=data_y[i];
+                var wp=dx*bar_width/100;
+                var x_pos = pad + dx*i+dx/2-wp/2;
+                var y_pos = pad + this.pre_calc.h_graph -(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
+
+                //bars
+                if(bar_visible){
+                    var rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+                    rect.setAttribute('x',x_pos);
+                    rect.setAttribute('y',y_pos);
+                    rect.setAttribute('width',wp);
+                    rect.setAttribute('height',h_graph-y_pos);
+                    rect.setAttribute('fill',bar_fill);
+                    rect.setAttribute('stroke',bar_stroke);
+                    rect.setAttribute('stroke-width',bar_stroke_width);
+                    rect.setAttribute('rx',bar_border_radius);
+                    rect.setAttribute('ry',bar_border_radius);
+                    bar_grp.appendChild(rect);
+                }
+
+
+
+            }
+
+            svg.appendChild(bar_grp);
+
+        }
     }
 }
