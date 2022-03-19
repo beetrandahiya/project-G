@@ -946,7 +946,7 @@ class barGraph{
                             rect.setAttribute('x',x_pos);
                             rect.setAttribute('y',pad);
                             rect.setAttribute('width',wp);
-                            rect.setAttribute('height',h_graph);
+                            rect.setAttribute('height',y_pos-pad);
                             break;
                     }
 
