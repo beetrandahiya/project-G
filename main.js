@@ -1148,7 +1148,10 @@ class horizontalBarGraph{
 
         dy=pre_calc.w_graph/(layout.yaxes.no_parts-1);
         dx=pre_calc.h_graph/(pre_calc.mostdataset_length);
-        
+
+        for(dataindex=0;dataindex<this.graphData.length;dataindex++){
+            
+        }
     }
 
 }
