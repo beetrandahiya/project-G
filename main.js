@@ -1054,6 +1054,7 @@ class barGraph{
             var bar_fill_style=data.bar.fill_style||"from-zero";
             var bar_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
 
+            var ic=0;
             for(var i=0;i<data_x.length;i++){
                 var y=data_y[i];
                 var wp=dx*bar_width/100;
@@ -1091,7 +1092,19 @@ class barGraph{
                             break;
                     }
 
-                   rect.setAttribute('fill',bar_fill);
+                    if(typeof(bar_fill)=="object"){
+                        if(ic<bar_fill.length){
+                        var bar_fill_color=bar_fill[ic];
+                    ic++;}
+                        else{
+                            var bar_fill_color=bar_fill[ic-1];
+                            ic=0;
+                        }
+                        rect.setAttribute('fill',bar_fill_color);
+                    }
+                    else{
+                        rect.setAttribute('fill',bar_fill);
+                    }
                     rect.setAttribute('stroke',bar_stroke);
                     rect.setAttribute('stroke-width',bar_stroke_width);
                     switch(bar_stroke_style){
@@ -1173,6 +1186,7 @@ class horizontalBarGraph{
 
             var map_ratioH= this.pre_calc.w_graph/(y_max-y_min)
             var zeroval_coordH= pad + (0-y_min)*map_ratioH;
+            var ic=0;
             for(var i=0;i<data_x.length;i++){
                 var y=data_y[i];
                 var wp=dx*bar_width/100;
@@ -1210,7 +1224,19 @@ class horizontalBarGraph{
                             break;
                     }
 
-                    rect.setAttribute('fill',bar_fill);
+                    if(typeof(bar_fill)=="object"){
+                        if(ic<bar_fill.length){
+                        var bar_fill_color=bar_fill[ic];
+                    ic++;}
+                        else{
+                            var bar_fill_color=bar_fill[ic-1];
+                            ic=0;
+                        }
+                        rect.setAttribute('fill',bar_fill_color);
+                    }
+                    else{
+                        rect.setAttribute('fill',bar_fill);
+                    }
                     rect.setAttribute('stroke',bar_stroke);
                     rect.setAttribute('stroke-width',bar_stroke_width);
                     switch(bar_stroke_style){
@@ -1252,4 +1278,28 @@ class horizontalBarGraph{
         }
     }
 
+}
+
+class stackedBarGraph{
+    constructor(DOM_container,graphData,layout){
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc=graph_precalculate(this.graphData,this.layout);
+
+        makeGridBar(this.DOM_container,this.pre_calc,this.layout);
+        makeTitle(this.DOM_container,this.layout);
+        makeLabelsBar(this.DOM_container,this.pre_calc,this.layout);
+
+        dy=pre_calc.h_graph/(layout.yaxes.no_parts-1);
+        dx=pre_calc.w_graph/(pre_calc.mostdataset_length);
+
+        for(dataindex=0;dataindex<this.graphData.length;dataindex++){
+          
+
+
+
+        
+    }
+}
 }

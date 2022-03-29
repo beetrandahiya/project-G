@@ -19,6 +19,7 @@ data={
     }
 };
 
+sprngcolors=["#69f56e","#f56969","#f56e69","#69f569","#6969f5","#f569f5","#69f5f5","#faf"];
 data1={
     x:[1,2,3,4,5,6,7,8],
     y:[20,24,25,17,-7,-4,6,13],
@@ -42,13 +43,15 @@ data2={
     y:[20,24,25,17,7,4,6,13],
     name:"bar",
     bar:{
-        fill:"#695fe6",
+        fill:sprngcolors,
         stroke:"#000",
         stroke_width:0,
         border_radius:2,
         fill_style:"from-zero",
     }
 }
+
+  
 data3={
     x:[1,2,3,4,5,6,7,8],
     y:[10,24,35,21,-9,14,6,23],
@@ -63,7 +66,7 @@ data3={
         fill_style:"from-zero",
     }
 }
-datasetbar=[data2,data3]
+datasetbar=[data2]
 dataset=[data1,data]
 
 layout={
