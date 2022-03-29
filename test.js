@@ -126,8 +126,8 @@ layoutbar={
 
     xaxes:{
         title:{text:'X-axis',fontfamily:"Montserrat"},
-        visible:false,
-        stroke_width:"0.1px",
+        visible:true,
+        stroke_width:"1px",
         stroke:"#000000",
         style:"solid"
     }
@@ -138,7 +138,7 @@ layoutbar={
         domain:[-10,40],
         style: "solid",
         stroke:'#000000',
-        stroke_width:"0.1px",
+        stroke_width:"1px",
         visible:true
     },
 
@@ -168,7 +168,7 @@ layoutbar={
 new scatterGraph(document.getElementById("container"),dataset,layout);
 new bezierGraph(document.getElementById("container1"),dataset,layout);
 new barGraph(document.getElementById("container2"),datasetbar,layoutbar);
-
+new horizontalBarGraph(document.getElementById("container2"),datasetbar,layoutbar);
 
 
   

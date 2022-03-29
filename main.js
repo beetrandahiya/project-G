@@ -246,6 +246,101 @@ function makeGridBar(DOM_container,pre_calc,layout){
 
 }
 
+function makeGridBarH(DOM_container,pre_calc,layout){
+
+    //making the main svg
+    //making the main svg
+    svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("width",pre_calc.w);
+    svg.setAttribute("height",pre_calc.h);
+    svg.setAttribute("viewBox","0 0 "+pre_calc.w+" "+pre_calc.h);
+    svg.setAttribute("style",layout.styles)
+    DOM_container.appendChild(svg);
+
+    //making the grid
+    dy=pre_calc.w_graph/(layout.yaxes.no_parts-1);
+    dx=pre_calc.h_graph/(pre_calc.mostdataset_length);
+
+    y_axes_stroke_width=layout.yaxes.stroke_width;
+    y_axes_stroke_color=layout.yaxes.stroke;
+    y_axes_stroke_dasharray=layout.yaxes.style;
+    y_axes_domain=layout.yaxes.domain;
+
+    x_axes_stroke_width=layout.xaxes.stroke_width;
+    x_axes_stroke_color=layout.xaxes.stroke;
+    x_axes_stroke_dasharray=layout.xaxes.style;
+
+    
+    if (y_axes_domain != "auto") {
+        y_min = y_axes_domain[0]; //here we set the domain of y axis
+        y_max = y_axes_domain[1];
+    }
+
+    //y axes
+    yaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.yaxes.visible){
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",pad+dy*i);
+        line.setAttribute("y1",pad);
+        line.setAttribute("x2",pad+dy*i);
+        line.setAttribute("y2",pad+pre_calc.h_graph);
+        line.setAttribute("stroke",y_axes_stroke_color);
+        line.setAttribute("stroke-width",y_axes_stroke_width);
+        switch(y_axes_stroke_dasharray){
+            case "solid":
+                line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                line.setAttribute("stroke-dasharray","3,5");
+                break;
+            case "dotted":
+                line.setAttribute("stroke-dasharray","1,3");
+                break;
+        }
+
+        yaxes_grp.appendChild(line);
+    }}
+
+    
+    //x axes
+    xaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.xaxes.visible){     
+        for(i=0;i<=pre_calc.mostdataset_length;i++){
+            line=document.createElementNS("http://www.w3.org/2000/svg","line");
+            line.setAttribute("x1",pad);
+            line.setAttribute("y1",pad+dx*i);
+            line.setAttribute("x2",pad+pre_calc.w_graph);
+            line.setAttribute("y2",pad+dx*i);
+            line.setAttribute("stroke",x_axes_stroke_color);
+            line.setAttribute("stroke-width",x_axes_stroke_width);
+            switch(x_axes_stroke_dasharray){
+                case "solid":
+                    line.setAttribute("stroke-dasharray","none");
+                    break;
+                case "dashed":
+                    line.setAttribute("stroke-dasharray","4,5");
+                    break;
+                case "dotted":
+                    line.setAttribute("stroke-dasharray","1,3");
+                    break;
+            }     
+
+            xaxes_grp.appendChild(line);
+        }
+    }
+
+    //adding the grid to the main svg
+    svg.appendChild(yaxes_grp);
+    svg.appendChild(xaxes_grp);
+ 
+
+
+
+    
+
+}
+
 function makeTitle(DOM_container,layout){
     //making the title
     title=document.createElementNS("http://www.w3.org/2000/svg","text");
@@ -329,6 +424,44 @@ function makeLabelsBar(DOM_container,pre_calc,layout){
         xlbl.setAttribute("font-weight",layout.xlabels.font_weight);
         xlbl.setAttribute("fill",layout.xlabels.color);
         xlbl.setAttribute("anti-alias","true");
+        xlbl.innerHTML=layout.xlabels.labels[i];
+        xlabel_grp.appendChild(xlbl);
+    }
+
+    svg.appendChild(ylabel_grp);
+    svg.appendChild(xlabel_grp);
+}
+
+function makeLabelsBarH(DOM_container,pre_calc,layout){
+    //making the labels
+    ylabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    xlabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        var ylbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        ylbl.setAttribute("x",dy*i+pad);
+        ylbl.setAttribute("y",pre_calc.h-pad+layout.xlabels.font_size);
+        ylbl.setAttribute("text-anchor","middle");
+        ylbl.setAttribute("font-size",layout.ylabels.font_size);
+        ylbl.setAttribute("font-family",layout.ylabels.font_family);
+        ylbl.setAttribute("font-weight",layout.ylabels.font_weight);
+        ylbl.setAttribute("fill",layout.ylabels.color);
+        ylbl.setAttribute("alignment-baseline","middle");
+        ylbl.setAttribute("anti-alias","true");
+        ylbl.innerHTML=pre_calc.yaxes_labels[i];
+        ylabel_grp.appendChild(ylbl);
+    }
+
+    for(i=0;i<pre_calc.mostdataset_length;i++){
+        var xlbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        xlbl.setAttribute("x",pad-5);
+        xlbl.setAttribute("y",pre_calc.h-(dx*i)-pad-dx/2);
+        xlbl.setAttribute("text-anchor","end");
+        xlbl.setAttribute("font-size",layout.xlabels.font_size);
+        xlbl.setAttribute("font-family",layout.xlabels.font_family);
+        xlbl.setAttribute("font-weight",layout.xlabels.font_weight);
+        xlbl.setAttribute("fill",layout.xlabels.color);
+        xlbl.setAttribute("anti-alias","true");
+        xlbl.setAttribute("alignment-baseline","middle")
         xlbl.innerHTML=layout.xlabels.labels[i];
         xlabel_grp.appendChild(xlbl);
     }
@@ -1000,4 +1133,20 @@ class barGraph{
 
         }
     }
+}
+
+class horizontalBarGraph{
+    constructor(DOM_container,graphData,layout){
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc=graph_precalculate(this.graphData,this.layout);
+
+        makeGridBarH(this.DOM_container,this.pre_calc,this.layout);
+        makeTitle(this.DOM_container,this.layout);
+        makeLabelsBarH(this.DOM_container,this.pre_calc,this.layout);
+
+        
+    }
+
 }
