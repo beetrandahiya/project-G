@@ -171,7 +171,7 @@ layoutbar={
 new scatterGraph(document.getElementById("container"),dataset,layout);
 new bezierGraph(document.getElementById("container1"),dataset,layout);
 new barGraph(document.getElementById("container2"),datasetbar,layoutbar);
-new horizontalBarGraph(document.getElementById("container2"),datasetbar,layoutbar);
+//new horizontalBarGraph(document.getElementById("container2"),datasetbar,layoutbar);
 
 
   
