@@ -1146,6 +1146,8 @@ class horizontalBarGraph{
         makeTitle(this.DOM_container,this.layout);
         makeLabelsBarH(this.DOM_container,this.pre_calc,this.layout);
 
+        dy=pre_calc.w_graph/(layout.yaxes.no_parts-1);
+        dx=pre_calc.h_graph/(pre_calc.mostdataset_length);
         
     }
 
