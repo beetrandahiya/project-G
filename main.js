@@ -1210,7 +1210,7 @@ class horizontalBarGraph{
                             break;
                     }
 
-                   rect.setAttribute('fill',bar_fill);
+                    rect.setAttribute('fill',bar_fill);
                     rect.setAttribute('stroke',bar_stroke);
                     rect.setAttribute('stroke-width',bar_stroke_width);
                     switch(bar_stroke_style){

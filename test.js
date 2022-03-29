@@ -126,8 +126,8 @@ layoutbar={
 
     xaxes:{
         title:{text:'X-axis',fontfamily:"Montserrat"},
-        visible:true,
-        stroke_width:"1px",
+        visible:false,
+        stroke_width:"0.1px",
         stroke:"#000000",
         style:"solid"
     }
@@ -138,7 +138,7 @@ layoutbar={
         domain:[-10,40],
         style: "solid",
         stroke:'#000000',
-        stroke_width:"1px",
+        stroke_width:"0.3px",
         visible:true
     },
 
