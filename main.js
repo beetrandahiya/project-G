@@ -1151,6 +1151,104 @@ class horizontalBarGraph{
 
         for(dataindex=0;dataindex<this.graphData.length;dataindex++){
             
+            var data=this.graphData[dataindex];
+            var data_x=data.x;
+            var data_y=data.y;
+            if(data.visible==false){
+                continue;
+            }
+
+            var bar_width=data.bar.width || 50; //width percentage
+            var bar_fill=data.bar.fill;
+            var bar_stroke=data.bar.stroke||"none";
+            var bar_stroke_width=data.bar.stroke_width||0;
+            var bar_stroke_style=data.bar.stroke_style||"solid";
+            var bar_visible=data.bar.visible||true;
+            var bar_border_radius=data.bar.border_radius||0;
+            var bar_fill_style=data.bar.fill_style||"from-zero";
+            var bar_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+
+            console.log(dx)
+            console.log(dy)
+
+            var map_ratioH= this.pre_calc.w_graph/(y_max-y_min)
+            var zeroval_coordH= pad + (0-y_min)*map_ratioH;
+            for(var i=0;i<data_x.length;i++){
+                var y=data_y[i];
+                var wp=dx*bar_width/100;
+                var x_pos = pad + dx*i+dx/2-wp/2;
+                var y_pos = pad + (y-this.pre_calc.y_min)*map_ratioH;
+
+                //bars
+                if(bar_visible){
+                    var rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+                    switch(bar_fill_style){
+                        case "from-min":
+                            rect.setAttribute('x',pad);
+                            rect.setAttribute('y',pre_calc.h-(dx*i)-pad-dx/2-wp/2);
+                            rect.setAttribute('width',y_pos);
+                            rect.setAttribute('height',wp);
+                            break;
+                        case "from-zero":
+                            if(y>0){
+                                rect.setAttribute('x',zeroval_coordH);
+                                rect.setAttribute('y',pre_calc.h-(dx*i)-pad-dx/2-wp/2);
+                                rect.setAttribute('width',y_pos-zeroval_coordH);
+                                rect.setAttribute('height',wp);}
+                            else{
+                                rect.setAttribute('x',y_pos);
+                                rect.setAttribute('y',pre_calc.h-(dx*i)-pad-dx/2-wp/2);
+                                rect.setAttribute('width',zeroval_coordH-y_pos);
+                                rect.setAttribute('height',wp);
+                            }
+                            break;
+                        case "from-max":
+                            rect.setAttribute('x',y_pos);
+                            rect.setAttribute('y',pre_calc.h-(dx*i)-pad-dx/2-wp/2);
+                            rect.setAttribute('width',this.pre_calc.w_graph+pad-y_pos);
+                            rect.setAttribute('height',wp);
+                            break;
+                    }
+
+                   rect.setAttribute('fill',bar_fill);
+                    rect.setAttribute('stroke',bar_stroke);
+                    rect.setAttribute('stroke-width',bar_stroke_width);
+                    switch(bar_stroke_style){
+                        case "solid":
+                            rect.setAttribute("stroke-dasharray","none");
+                            break;
+                        case "dashed":
+                            rect.setAttribute("stroke-linecap","round");
+                            rect.setAttribute("stroke-dasharray","3,5");
+                            break;
+                        case "dotted":
+                            rect.setAttribute("stroke-linecap","round");
+                            rect.setAttribute("stroke-dasharray","0.2,5");
+                            break;
+                        case "dash-dot":
+                            rect.setAttribute("stroke-dasharray","3,5,0.2,5");
+                            break;
+                        case "spaced-dot":
+                            rect.setAttribute("stroke-dasharray","0.2,8");
+                            break;
+                        case "spaced-dash":
+                            rect.setAttribute("stroke-dasharray","4,8");
+                            break;
+                        case "long-dash":
+                            rect.setAttribute("stroke-dasharray","8,8");
+                            break;
+                    }
+        
+                    rect.setAttribute('rx',bar_border_radius);
+                    rect.setAttribute('ry',bar_border_radius);
+                    bar_grp.appendChild(rect);
+                }
+
+
+
+            }
+
+            svg.appendChild(bar_grp);
         }
     }
 
