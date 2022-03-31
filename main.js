@@ -575,8 +575,14 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
         legend_text.setAttribute("anti-alias","true");
         legend_text.innerHTML=graphData[dataindex].name;
 
-        legend_grp.appendChild(legend_line);
-        legend_grp.appendChild(legend_marker);
+        if(graphData[dataindex].line.visible)
+            {
+            legend_grp.appendChild(legend_line);
+            }
+        if(graphData[dataindex].marker.visible)
+            {
+            legend_grp.appendChild(legend_marker);
+            }
         legend_grp.appendChild(legend_text);
     }
     svg.appendChild(legend_grp);
