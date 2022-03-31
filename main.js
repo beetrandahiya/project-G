@@ -560,11 +560,11 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 break;
         }
         
+        if(graphData[dataindex].marker.visible){
         legend_marker.setAttribute("r",graphData[dataindex].marker.size);
         legend_marker.setAttribute("fill",graphData[dataindex].marker.fill);
         legend_marker.setAttribute("stroke",graphData[dataindex].marker.color);
-
-        
+        }
 
         legend_text.setAttribute("text-anchor","start");
         legend_text.setAttribute("font-size",layout.legend.font_size);
@@ -575,18 +575,24 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
         legend_text.setAttribute("anti-alias","true");
         legend_text.innerHTML=graphData[dataindex].name;
 
-        if(graphData[dataindex].line.visible)
-            {
-            legend_grp.appendChild(legend_line);
-            }
-        if(graphData[dataindex].marker.visible)
-            {
-            legend_grp.appendChild(legend_marker);
-            }
+        if(graphData[dataindex].line.visible!=false){
+            graphData[dataindex].line.visible=true
+        }
+        if(graphData[dataindex].marker.visible!=false){
+            graphData[dataindex].marker.visible=true
+        }
+
+    if(graphData[dataindex].line.visible){
+        legend_grp.appendChild(legend_line);
+    }
+    if(graphData[dataindex].marker.visible){
+        legend_grp.appendChild(legend_marker);
+    }
         legend_grp.appendChild(legend_text);
     }
     svg.appendChild(legend_grp);
-}}
+}
+}
 
 
 ////////////////////////////////////////////////////////
@@ -619,10 +625,14 @@ class lineGraph{
             var line_color=data.line.color;
             var line_width=data.line.width || 2;
             var line_fill=data.line.fill||"none";
-            var line_fillstyle=data.line.fill_style;
+            var line_fillstyle=data.line.fill_style||"from-min";
             var line_style=data.line.style || "solid";
             var line_linecap=data.line.linecap || "round";
             var line_linejoin=data.line.linejoin || "round";
+            var line_visible=data.line.visible;
+            if(line_visible!=false){
+                line_visible=true;
+            }
 
             var marker_size=data.marker.size;
             var marker_color=data.marker.color;
@@ -698,6 +708,7 @@ class lineGraph{
 
 
 
+             if(line_visible){
             var polyline=document.createElementNS("http://www.w3.org/2000/svg","polyline");
             polyline.setAttribute("points",polyline_str);
             polyline.setAttribute("stroke",line_color);
@@ -737,8 +748,10 @@ class lineGraph{
             filline.setAttribute("stroke-linecap",line_linecap);
             filline.setAttribute("stroke-linejoin",line_linejoin);
             
+            
             svg.appendChild(filline);
             svg.appendChild(polyline);
+        }
             svg.appendChild(marker_grp);
             
         }
@@ -776,11 +789,15 @@ class bezierGraph{
             var line_color=data.line.color;
             var line_width=data.line.width || 2;
             var line_fill=data.line.fill||"none";
-            var line_fillstyle=data.line.fill_style;
+            var line_fillstyle=data.line.fill_style||"from-min";
             var line_style=data.line.style || "solid";
             var line_linecap=data.line.linecap || "round";
             var line_linejoin=data.line.linejoin || "round";
             var line_tension=data.line.tension || 0.2;
+            var line_visible=data.line.visible;
+            if(line_visible!=false){
+                line_visible=true;
+            }
             var marker_size=data.marker.size;
             var marker_color=data.marker.color;
             var marker_fill=data.marker.fill;
@@ -810,6 +827,7 @@ class bezierGraph{
             }
         
 
+            if(line_visible){
             // Create the svg <path> element
             var path= document.createElementNS("http://www.w3.org/2000/svg","path");
             path.setAttribute('d',svgPath(points, bezierCommand,line_tension));
@@ -906,6 +924,7 @@ class bezierGraph{
             
             svg.appendChild(fillpath);
             svg.appendChild(path);
+        }
             svg.appendChild(marker_grp);
 
 
