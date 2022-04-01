@@ -1,615 +1,1362 @@
-colorpallete1 = ['#00C0C7', '#5144D3', '#E8871A', '#DA3490', '#9089FA', '#47E26F', '#2780EB'];
-shadesofred = ['#2E0E02', '#581908', '#983628', '#FE5F55', '#F93943'];
-shadesofgreen = ['#134611', '#3E8914', '#3DA35D', '#96E072', '#E8FCCF'];
-neonpallete = ['#DB276', '#B0DB43', '#12EAEA', '#440BD4', '#5CE5D5'];
+/*
+Name :  Not decided
+Creator / Author : Prakrisht Dahiya
+*/
 
+////////////////////////////////////////////////////////
+///////////////  Pre-Calculation ///////////////////////
 
-function newLineGraph(containerDOM, graphData, layout) {
+function graph_precalculate(graphData,layout){
+    pre_calc={};
 
-
-    element = document.getElementById(containerDOM);
-
-    /////////////////////////////////////////////
-    height = layout.height;
-    width = layout.width;
-    padding = layout.padding;
-    bgcolor = layout.bgcolor || '#fff';
-    styles=layout.styles||{};
-
-
-    /////////////////////////////////////////////
-
-    title = layout.title || {};
-    title_font_color=layout.title.fontcolor || '#000';
-    title_font_size=layout.title.fontsize || '20px';
-    title_font_family=layout.title.fontfamily || 'Arial';
-    title_font_weight=layout.title.fontweight || 'bold';
-
-
-    /////////////////////////////////////////////
-
-    xaxis = layout.xaxis || {};
-    xaxis_title = xaxis.title || {};
-    x_axis_title = layout.xaxis.title.text || "";
-    x_axis_title_font_size = layout.xaxis.title.fontsize || 18;
-    x_axis_title_font_color = layout.xaxis.title.fontcolor || "#000";
-    x_axis_title_font_family = layout.xaxis.title.fontfamily || "Arial";
-    x_axis_title_font_weight = layout.xaxis.title.fontweight || "bold";
-
-    ///////////////////////////////////////////////
-    x_axis_visible = layout.xaxis.visible || true;
-    x_axis_stroke = layout.xaxis.stroke || "rgba(0,0,0,0.2)";
-    x_axis_stroke_width = layout.xaxis.stroke_width || "0.5px";
-
-    //////////////////////////////////////////////
-
-    yaxis = layout.yaxis || {};
-    yaxis_title = layout.yaxis.title || {};
-    y_axis_title = layout.yaxis.title.text || "";
-    y_axis_title_font_size = layout.yaxis.title.fontsize || 18;
-    y_axis_title_font_color = layout.yaxis.title.fontcolor || "#000";
-    y_axis_title_font_family = layout.yaxis.title.fontfamily || "Arial";
-    y_axis_title_font_weight = layout.yaxis.title.fontweight || "bold";
-
-
-    ///////////////////////////////////////////////
-    y_axis_visible = layout.yaxis.visible || true;
-    y_axis_stroke = layout.yaxis.stroke || "rgba(0,0,0,0.2)";
-    y_axis_stroke_width = layout.yaxis.stroke_width || "0.5px";
-    y_axis_domain = layout.yaxis.domain || "auto";
-    y_axis_no_parts = layout.yaxis.no_parts || 5;
-
-
-    //////////////////////////////////////////////
-
-    xlabel = layout.xlabel || {};
-
-    x_labels = layout.xlabel.labels || graphData[0].x; //here we set the labels to be shown on x axis and if not specified then we set it to be the x values of the first graph in the data array .
-    x_axis_label_visible = layout.xlabel.visible || false;
-    x_axis_label_font_size = layout.xlabel.fontsize || 12;
-    x_axis_label_font_color = layout.xlabel.fontcolor || "rgba(0,0,0,0.5)";
-    x_axis_label_font_family = layout.xlabel.fontfamily || "sans-serif";
-    x_axis_label_font_weight = layout.xlabel.fontweight || "normal";
-
-    /////////////////////////////////////////////
-
-    ylabel = layout.ylabel  || {};
-
-    y_axis_label_visible = layout.ylabel.visible || true;
-    y_axis_label_font_size = layout.ylabel.fontsize || 12;
-    y_axis_label_font_color = layout.ylabel.fontcolor || "rgba(0,0,0,0.5)";
-    y_axis_label_font_family = layout.ylabel.fontfamily || "sans-serif";
-    y_axis_label_font_weight = layout.ylabel.fontweight || "normal";
-
-    /////////////////////////////////////////////
-
-    legend = layout.legend || {};
-
-    legend_visible = layout.legend.visible || true;
-    legend_position = layout.legend.position || "top-right";
-    legend_font_size = layout.legend.fontsize || 12;
-    legend_font_color = layout.legend.fontcolor || "rgba(0,0,0,0.5)";
-    legend_font_family = layout.legend.fontfamily || "sans-serif";
-    legend_font_weight = layout.legend.fontweight || "normal";
-    legend_padding = layout.legend.padding || 10;
-
-    /////////////////////////////////////////////
-
-
-
-
-
-    h_graph = height - 2 * padding;
-    h_base_graph = height - padding;
-    const mainsvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    mainsvg.setAttributeNS(null, "width", width);
-    mainsvg.setAttributeNS(null, "height", height);
-    mainsvg.setAttributeNS(null, "style", "background:" + bgcolor+"; "+styles);
-
-    /////////////////////////////////////////////
-    for (dataindex = 0; dataindex < graphData.length; dataindex++) { //here we find the max value of the data and set the y axis domain to be the same as the max value of the data.
+    //here we find the max value of the data and set the y axis domain to be the same as the max value of the data.
+    for (dataindex = 0; dataindex < graphData.length; dataindex++) { 
         var data = graphData[dataindex];
         var data_y = data.y;
+        
         if (dataindex == 0) {
             y_max = Math.max(...data_y);
             y_min = Math.min(...data_y);
+            mostdataset_index = dataindex;
+            mostdataset_length = data_y.length;
+            maxdatasetval_index = 0;
         } else {
             y_max = Math.max(y_max, Math.max(...data_y));
             y_min = Math.min(y_min, Math.min(...data_y));
             maxdatasetval_index = dataindex;
+            if(data_y.length>graphData[mostdataset_index].y.length){
+                mostdataset_index = dataindex;
+                mostdataset_length = data_y.length;
+            }
         }
+
+    }
+    if (layout.yaxes.domain != "auto") {
+        y_min = layout.yaxes.domain[0]; //here we set the domain of y axis
+        y_max = layout.yaxes.domain[1];
     }
 
-    /////////////////////////////////////////////
-
-    if (y_axis_domain != "auto") {
-        y_min = y_axis_domain[0]; //here we set the domain of y axis
-        y_max = y_axis_domain[1];
+    //calculating labels for y axes
+    yaxes_labels=[];
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        yaxes_labels.push(y_min+(y_max-y_min)*(i)/(layout.yaxes.no_parts-1));
     }
 
-    ///////////////////////////////////////////////
-    //here we make the x axis title
+    //calculating map ratio and height, width of graph
+    h=layout.height;
+    w=layout.width;
+    pad=layout.padding;
+    h_graph=h-pad*2;
+    map_ratio = h_graph / (y_max - y_min);
 
-    const xaxistitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    xaxistitle.setAttributeNS(null, "x", width / 2);
-    xaxistitle.setAttributeNS(null, "y", height - x_axis_title_font_size);
-    xaxistitle.setAttributeNS(null, "fill", x_axis_title_font_color);
-    xaxistitle.setAttributeNS(null, "font-size", x_axis_title_font_size);
-    xaxistitle.setAttributeNS(null, "font-family", x_axis_title_font_family);
-    xaxistitle.setAttributeNS(null, "font-weight", x_axis_title_font_weight);
-    xaxistitle.setAttributeNS(null, "text-anchor", "middle");
-
-    xaxistitle.innerHTML = x_axis_title;
-    mainsvg.appendChild(xaxistitle);
-
-    ///////////////////////////////////////////////
-    //here we make the y axis title
-
-    const yaxistitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    yaxistitle.setAttributeNS(null, "x", -(height / 2));
-    yaxistitle.setAttributeNS(null, "y", (padding / 2));
-    yaxistitle.setAttributeNS(null, "fill", y_axis_title_font_color);
-    yaxistitle.setAttributeNS(null, "font-size", y_axis_title_font_size);
-    yaxistitle.setAttributeNS(null, "font-family", y_axis_title_font_family);
-    yaxistitle.setAttributeNS(null, "font-weight", y_axis_title_font_weight);
-    yaxistitle.setAttributeNS(null, "text-anchor", "middle");
-    yaxistitle.setAttributeNS(null, "transform", "rotate(-90)");
-    yaxistitle.innerHTML = y_axis_title;
-    mainsvg.appendChild(yaxistitle);
-
-    ///////////////////////////////////////////////
-    //here we make chart title
-
-    titlesvg=document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    titlesvg.setAttributeNS(null, "x", width / 2);
-    titlesvg.setAttributeNS(null, "y", padding / 2);
-    titlesvg.setAttributeNS(null, "fill", title_font_color);
-    titlesvg.setAttributeNS(null, "font-size", title_font_size);
-    titlesvg.setAttributeNS(null, "font-family", title_font_family);
-    titlesvg.setAttributeNS(null, "font-weight", title_font_weight);
-    titlesvg.setAttributeNS(null, "text-anchor", "middle");
-    titlesvg.innerHTML = title.text;
-    mainsvg.appendChild(titlesvg);
+    //zero val coord
+    zeroval_coord=pad+h_graph-(0-y_min)*map_ratio;
 
 
-    //////////////////////////////////////////////
-    polylinesset = [];
+    pre_calc.h=h;
+    pre_calc.w=w;
+    pre_calc.pad=pad;
+    pre_calc.y_max = y_max;
+    pre_calc.y_min = y_min;
+    pre_calc.maxdatasetval_index = maxdatasetval_index;
+    pre_calc.mostdataset_index = mostdataset_index;
+    pre_calc.mostdataset_length = mostdataset_length;
+    pre_calc.h_graph = h_graph;
+    pre_calc.w_graph = w-pad*2;
+    pre_calc.map_ratio = map_ratio;
+    pre_calc.yaxes_labels = yaxes_labels;
+    pre_calc.zeroval_coord = zeroval_coord;
+
+    return pre_calc;
+
+}
+
+function makeGrid(DOM_container,pre_calc,layout){
+    //making the main svg
+    svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("width",pre_calc.w);
+    svg.setAttribute("height",pre_calc.h);
+    svg.setAttribute("viewBox","0 0 "+pre_calc.w+" "+pre_calc.h);
+    svg.setAttribute("style",layout.styles)
+    DOM_container.appendChild(svg);
+
+    //making the grid
+    dy=pre_calc.h_graph/(layout.yaxes.no_parts-1);
+    dx=pre_calc.w_graph/(pre_calc.mostdataset_length-1);
+    
+    y_axes_stroke_width=layout.yaxes.stroke_width;
+    y_axes_stroke_color=layout.yaxes.stroke;
+    y_axes_stroke_dasharray=layout.yaxes.style;
+    y_axes_domain=layout.yaxes.domain;
+
+    x_axes_stroke_width=layout.xaxes.stroke_width;
+    x_axes_stroke_color=layout.xaxes.stroke;
+    x_axes_stroke_dasharray=layout.xaxes.style;
 
 
-
-    for (dataindex = 0; dataindex < graphData.length; dataindex++) {
-
-
-        polylinepointssvg = " ";
-        polylinepoints=[];
-        zerolinepointssvg= " ";
-        zerolinepoints=[];
-        minvalpointssvg=" ";
-        minvalpoints=[];
-        maxvalpointssvg=" ";
-        maxvalpoints=[];
-        polylinepoints_fill=[];
-
-        //polylinepoints_fillsvg = " " + padding + "," + h_base_graph + " ";
-        //minvalpoints_fillsvg=" "+padding+","+h_base_graph+" ";
-        //maxvalpoints_fillsvg=" "+padding+","+padding+" ";
-        
-        
-
-        var data = graphData[dataindex];
-        var data_x = data.x;
-        var data_y = data.y;
-        var data_name = data.name || "trace " + dataindex;
-        var data_visible = data.visible || true;
-        if (data_visible == false) {
-            continue;
-        };
-
-        var line = data.line;
-        var marker = data.marker;
-        var line_color = line.color;
-        var line_width = line.width || 2;
-        var line_fill = line.fill;
-        var line_fillstyle = line.fillstyle || "from-min";
-        var line_style = line.style|| "solid";
-        var line_linecap = line.linecap || "round";
-        var line_linejoin = line.linejoin || "round";
-        var marker_size = marker.size;
-        var marker_color = marker.color;
-        var marker_fill = marker.fill;
-
-        var animationtrue = data.animation || true;
-
-        //here we make the legend
-        svglegend = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        if (legend_position == "top-right") {
-            svglegend.setAttributeNS(null, "x", width - padding + 2 * legend_padding);
-            svglegend.setAttributeNS(null, "y", padding + padding / 2 + dataindex * (legend_padding + legend_font_size));
-            svglegend.setAttributeNS(null, "text-anchor", "start");
-            svglegendline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            svglegendline.setAttributeNS(null, "x1", width - padding + legend_padding / 2);
-            svglegendline.setAttributeNS(null, "y1", padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3);
-            svglegendline.setAttributeNS(null, "x2", width - padding + 2 * legend_padding - 2);
-            svglegendline.setAttributeNS(null, "y2", padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3);
-            
-            svglegendpoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            svglegendpoint.setAttributeNS(null, "cx", (2 * (width - padding) + 5 / 2 * legend_padding - 2) / 2);
-            svglegendpoint.setAttributeNS(null, "cy", padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3);
-
-            
-        } else if (legend_position == "top-left") {
-            svglegend.setAttributeNS(null, "x", padding-2*legend_padding);
-            svglegend.setAttributeNS(null, "y", padding + padding / 2 + dataindex * (legend_padding + legend_font_size));
-            svglegend.setAttributeNS(null, "text-anchor", "end");
-            svglegendline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            svglegendline.setAttributeNS(null, "x1", 0);
-            svglegendline.setAttributeNS(null, "y1", padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3);
-            svglegendline.setAttributeNS(null, "x2", 20);
-            svglegendline.setAttributeNS(null, "y2", padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3);
-            
-            svglegendpoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            svglegendpoint.setAttributeNS(null, "cx", 10);
-            svglegendpoint.setAttributeNS(null, "cy", padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3);
-
-        } else if (legend_position == "bottom-right") {
-            svglegend.setAttributeNS(null, "x", width - padding + 2 * legend_padding);
-            svglegend.setAttributeNS(null, "y", height-(padding + padding / 2 + dataindex * (legend_padding + legend_font_size))+legend_font_size/2);
-            svglegend.setAttributeNS(null, "text-anchor", "start");
-            svglegendline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            svglegendline.setAttributeNS(null, "x1", width - padding + legend_padding / 2);
-            svglegendline.setAttributeNS(null, "y1", height-(padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3));
-            svglegendline.setAttributeNS(null, "x2", width - padding + 2 * legend_padding - 2);
-            svglegendline.setAttributeNS(null, "y2", height-(padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3));
-            
-            svglegendpoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            svglegendpoint.setAttributeNS(null, "cx", (2 * (width - padding) + 5 / 2 * legend_padding - 2) / 2);
-            svglegendpoint.setAttributeNS(null, "cy", height -(padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3));
-
-        } else if (legend_position == "bottom-left") {
-            svglegend.setAttributeNS(null, "x", padding-2*legend_padding);
-            svglegend.setAttributeNS(null, "y", height-(padding + padding / 2 + dataindex * (legend_padding + legend_font_size))+legend_font_size/2);
-            svglegend.setAttributeNS(null, "text-anchor", "end");
-            svglegendline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            svglegendline.setAttributeNS(null, "x1", 0);
-            svglegendline.setAttributeNS(null, "y1", height-(padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3));
-            svglegendline.setAttributeNS(null, "x2", 20);
-            svglegendline.setAttributeNS(null, "y2", height-(padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3));
-            
-            svglegendpoint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            svglegendpoint.setAttributeNS(null, "cx", 10);
-            svglegendpoint.setAttributeNS(null, "cy", height-(padding + padding / 2 + dataindex * (legend_padding + legend_font_size) - legend_font_size / 3));
-
-        } else if (legend_position == "top-center") {
-            svglegend.setAttributeNS(null, "x", width / 2);
-            svglegend.setAttributeNS(null, "y", padding + padding / 2 + dataindex * (padding + legend_font_size));
-        } else if (legend_position == "bottom-center") {
-            svglegend.setAttributeNS(null, "x", width / 2);
-            svglegend.setAttributeNS(null, "y", height - padding - padding / 2 - dataindex * (padding + legend_font_size));
-        } else if (legend_position == "left-center") {
-            svglegend.setAttributeNS(null, "x", 0);
-            svglegend.setAttributeNS(null, "y", height / 2);
-        } else if (legend_position == "right-center") {
-            svglegend.setAttributeNS(null, "x", width);
-            svglegend.setAttributeNS(null, "y", height / 2);
+    if (y_axes_domain != "auto") {
+        y_min = y_axes_domain[0]; //here we set the domain of y axis
+        y_max = y_axes_domain[1];
+    }
+    
+    //y axes
+    yaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.yaxes.visible){
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",pad);
+        line.setAttribute("y1",dy*i+pad);
+        line.setAttribute("x2",pad+pre_calc.w_graph);
+        line.setAttribute("y2",dy*i+pad);
+        line.setAttribute("stroke",y_axes_stroke_color);
+        line.setAttribute("stroke-width",y_axes_stroke_width);
+        switch(y_axes_stroke_dasharray){
+            case "solid":
+                line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                line.setAttribute("stroke-dasharray","3,5");
+                break;
+            case "dotted":
+                line.setAttribute("stroke-dasharray","1,3");
+                break;
         }
 
-        svglegend.setAttributeNS(null, "fill", legend_font_color);
-        svglegend.setAttributeNS(null, "font-size", legend_font_size);
-        svglegend.setAttributeNS(null, "font-family", legend_font_family);
-        svglegend.setAttributeNS(null, "font-weight", legend_font_weight);
-        svglegendline.setAttributeNS(null, "stroke", line_color);
-        svglegendline.setAttributeNS(null, "stroke-width", line_width);
-        svglegendline.setAttributeNS(null, "stroke-linecap", "round");
-        svglegendline.setAttributeNS(null, "stroke-linejoin", "round");
-        svglegendpoint.setAttributeNS(null, "r", marker_size);
-        svglegendpoint.setAttribute('r', marker_size);
-        svglegendpoint.setAttribute('stroke', marker_color);
-        svglegendpoint.setAttribute('fill', marker_fill);
-
-        svglegend.innerHTML = data_name;
-        mainsvg.appendChild(svglegendpoint);
-        mainsvg.appendChild(svglegend);
-        ///////////////////////////////////////////////
-
-        dx = (width - 2 * padding) / (data_x.length - 1);
-        dy = (height - 2 * padding) / y_axis_no_parts; //no. of parts in y axes
-
-        //make y grid lines
-        for (i = 0; i <= y_axis_no_parts; i++) {
-            h = height - padding - dy * i;
-            x1 = padding;
-            x2 = width - padding;
-            const ygridstr = document.createElementNS(
-                'http://www.w3.org/2000/svg',
-                'line'
-            );
-            ygridstr.setAttribute('x1', x1);
-            ygridstr.setAttribute('x2', x2);
-            ygridstr.setAttribute('y1', h);
-            ygridstr.setAttribute('y2', h);
-            ygridstr.setAttribute('stroke', y_axis_stroke);
-            ygridstr.setAttribute('stroke-width', y_axis_stroke_width);
-            const ylbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            ylbl.setAttribute('x', padding - 5);
-            ylbl.setAttribute('y', h + y_axis_label_font_size / 2);
-            ylbl.setAttribute('fill', y_axis_label_font_color);
-            ylbl.setAttribute('font-size', y_axis_label_font_size);
-            ylbl.setAttribute('font-family', y_axis_label_font_family);
-            ylbl.setAttribute('font-weight', y_axis_label_font_weight);
-            ylbl.setAttribute('text-anchor', 'end');
-            if(Math.abs(y_max - y_min) >10) {
-            ylbl.innerHTML = Math.round((y_max - y_min) * (i / y_axis_no_parts) + y_min);}
-            else {
-                ylbl.innerHTML = ((y_max - y_min) * (i / y_axis_no_parts) + y_min).toFixed(2);
-            }
-            if (y_axis_label_visible) {
-                mainsvg.appendChild(ylbl);
-            }
-            if (y_axis_visible) {
-                mainsvg.appendChild(ygridstr);
-            }
-
-
-        }
-
-
-        for (i = 0; i <= data_x.length - 1; i++) {
-            w = padding + i * dx;
-            y1 = height - padding; //min y
-            y2 = padding; //max y
-            //make x grid lines
-            const xgridstr = document.createElementNS(
-                'http://www.w3.org/2000/svg',
-                'line'
-            );
-            xgridstr.setAttribute('x1', w);
-            xgridstr.setAttribute('x2', w);
-            xgridstr.setAttribute('y1', y1);
-            xgridstr.setAttribute('y2', y2);
-            xgridstr.setAttribute('stroke', x_axis_stroke);
-            xgridstr.setAttribute('stroke-width', x_axis_stroke_width);
-            const xlbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            xlbl.setAttribute('x', w);
-            xlbl.setAttribute('y', height - padding + x_axis_label_font_size);
-            xlbl.setAttribute('fill', x_axis_label_font_color);
-            xlbl.setAttribute('font-size', x_axis_label_font_size);
-            xlbl.setAttribute('font-family', x_axis_label_font_family);
-            xlbl.setAttribute('font-weight', x_axis_label_font_weight);
-            xlbl.setAttribute('text-anchor', 'middle');
-            xlbl.innerHTML = x_labels[i];
-            if (x_axis_label_visible) {
-                mainsvg.appendChild(xlbl);
-            }
-            if (x_axis_visible) {
-                mainsvg.appendChild(xgridstr);
-            }
-
-
-            yval = ((data_y[i] - y_min) * (h_graph) / (y_max - y_min));
-            yval = height - padding - yval;
-            zeroval = ((0 - y_min) * (h_graph) / (y_max - y_min));
-            zeroval=height-padding-zeroval;
-
-            //make points
-            const str_point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            str_point.setAttribute('cx', w);
-            str_point.setAttribute('cy', yval);
-            str_point.setAttribute('r', marker_size);
-            str_point.setAttribute('stroke', marker_color);
-            str_point.setAttribute('fill', marker_fill);
-            pointhovervalue = data_x[i] + " , " + data_y[i];
-            str_point.setAttribute('title', pointhovervalue);
-            mainsvg.appendChild(str_point);
-
-            //add points to polyline
-            polylinepoints.push([w, yval]);
-            zerolinepoints.push([w, zeroval]);
-            minvalpoints.push([w, y1]);
-            maxvalpoints.push([w, y2]);
-            polylinepointssvg += " " + w + "," + yval + " ";
-        }
-
-        //make polyline
-        const polyline_fnl_obj = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-        polyline_fnl_obj.setAttribute('fill', 'none');
-        polyline_fnl_obj.setAttribute('stroke', line_color);
-        polyline_fnl_obj.setAttribute('stroke-width', line_width);
-        polyline_fnl_obj.setAttribute('points', polylinepointssvg);
-        polyline_fnl_obj.setAttribute('stroke-linejoin', line_linejoin);
-        polyline_fnl_obj.setAttribute('stroke-linecap', line_linecap);
-        polyline_fnl_obj.setAttribute('id', 'polyline_fnl_obj'+dataindex);
-
-        //set line style
-        if(line_style=="solid"){
-            polyline_fnl_obj.setAttribute('stroke-dasharray', 'none');
-            svglegendline.setAttribute('stroke-dasharray', 'none');
-            
-        }
-        else if(line_style=="dashed"){
-            polyline_fnl_obj.setAttribute('stroke-dasharray', '3,5');
-            svglegendline.setAttribute('stroke-dasharray', '3,5');
-        }
-        else if(line_style=="dotted"){
-            polyline_fnl_obj.setAttribute('stroke-dasharray', '0.2,5');
-            svglegendline.setAttribute('stroke-dasharray', '0.2,5');
-        }
-        else if(line_style=="dashdot"){
-            polyline_fnl_obj.setAttribute('stroke-dasharray', '3,5,0.2,5');
-            svglegendline.setAttribute('stroke-dasharray', '3,5,0.2,5');
-
-        }
-        else if(line_style=="spaced-dot"){
-            polyline_fnl_obj.setAttribute('stroke-dasharray', '0.2,8');
-            svglegendline.setAttribute('stroke-dasharray', '0.2,8');
-        }
-        else if(line_style=="spaced-dash"){
-            polyline_fnl_obj.setAttribute('stroke-dasharray', '4,8');
-            svglegendline.setAttribute('stroke-dasharray', '4,8');
-        }
-        else if(line_style=="long-dash"){
-            polyline_fnl_obj.setAttribute('stroke-dasharray', '8,8');
-            svglegendline.setAttribute('stroke-dasharray', '8,8');
-        }
-
-        
-
-        mainsvg.appendChild(svglegendline);
-
-        minval_final_fill_point = " " + width - padding + "," + h_base_graph + " ";
-        zeroline_final_fill_point=" " + width - padding + "," + zeroval+ " ";
-        maxval_final_fill_point=" " + width - padding + "," + y2+ " ";
-
-        polylinepoints_fillsvg = " " + padding + "," + h_base_graph + " "+ polylinepointssvg + minval_final_fill_point;
-
-        zerolinepoints_fillsvg = " "+padding+","+ zeroval + " " + polylinepointssvg +  zeroline_final_fill_point;
-
-        maxlinepoints_fillsvg = " " + padding + "," + y2 + " " + polylinepointssvg + maxval_final_fill_point;
-
-        
-
-        //make polyline fill
-
-        const polyline_fnl_fill_obj = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-        polyline_fnl_fill_obj.setAttribute('fill', line_fill);
-        polyline_fnl_fill_obj.setAttribute('stroke', 'none');
-        polyline_fnl_fill_obj.setAttribute('stroke-width', line_width);
-        polyline_fnl_fill_obj.setAttribute('id', 'polyline_fnl_fill_obj'+dataindex);
-        if(line_fillstyle=="from-min"){
-            polyline_fnl_fill_obj.setAttribute('points', polylinepoints_fillsvg);
-            polylinesset.push([polylinepoints,polylinepointssvg,polylinepoints_fillsvg]);
-        }
-        else if(line_fillstyle=="from-zero"){
-            polyline_fnl_fill_obj.setAttribute('points', zerolinepoints_fillsvg);
-            polylinesset.push([polylinepoints,polylinepointssvg,zerolinepoints_fillsvg]);
-        }
-        else if(line_fillstyle=="from-max"){
-            polyline_fnl_fill_obj.setAttribute('points', maxlinepoints_fillsvg);
-            polylinesset.push([polylinepoints,polylinepointssvg,maxlinepoints_fillsvg]);
-        }
-        mainsvg.appendChild(polyline_fnl_fill_obj);
-        mainsvg.appendChild(polyline_fnl_obj);
-
- /*   if(animationtrue==true){
-
-    const anim=document.createElementNS('http://www.w3.org/2000/svg','animate');
-    anim.setAttribute('href','#polyline_fnl_obj'+dataindex);
-    anim.setAttribute('attributeName','points');
-    anim.setAttribute('from',zerolinepoints);
-    anim.setAttribute('to',polylinepoints);
-    anim.setAttribute('dur','0.5s');
-    anim.setAttribute('fill','freeze');
-    //anim.setAttribute('calcMode','spline');
-    //anim.setAttribute('keySplines','0.4 0 0.2 1; 0.4 0 0.2 1');
-    //anim.setAttribute('values',zerolinepoints+';'+polylinepoints);
-    mainsvg.appendChild(anim);
-
-    const anim_fill=document.createElementNS('http://www.w3.org/2000/svg','animate');
-    anim_fill.setAttribute('href','#polyline_fnl_fill_obj'+dataindex);
-    anim_fill.setAttribute('attributeName','points');
-    anim_fill.setAttribute('from',zerolinepoints_fill);
-    anim_fill.setAttribute('to',polylinepoints_fill);
-    anim_fill.setAttribute('dur','0.5s');
-    anim_fill.setAttribute('fill','freeze');
-    //anim_fill.setAttribute('calcMode','spline');
-    //anim_fill.setAttribute('keySplines','0.4 0 0.2 1; 0.4 0 0.2 1');
-    //anim_fill.setAttribute('values',zerolinepoints+';'+polylinepoints);
-    mainsvg.appendChild(anim_fill);
-
-    }*/
-
-
-    element.appendChild(mainsvg);
-
+        yaxes_grp.appendChild(line);
     }
     
 
 
+    
+    }
+    //x axes
+    xaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.xaxes.visible){
+    for(i=0;i<  pre_calc.mostdataset_length;i++){
+        line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",pad+dx*i);
+        line.setAttribute("y1",pad);
+        line.setAttribute("x2",dx*i+pad);
+        line.setAttribute("y2",pad+pre_calc.h_graph);
+        line.setAttribute("stroke",x_axes_stroke_color);
+        line.setAttribute("stroke-width",x_axes_stroke_width);
+        switch(x_axes_stroke_dasharray){
+            case "solid":
+                line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                line.setAttribute("stroke-dasharray","4,5");
+                break;
+            case "dotted":
+                line.setAttribute("stroke-dasharray","1,3");
+                break;
+        }     
+
+        xaxes_grp.appendChild(line);
+    }}
+
+    //adding the grid to the main svg
+    svg.appendChild(yaxes_grp);
+    svg.appendChild(xaxes_grp);
+
+
+}
+
+function makeGridBar(DOM_container,pre_calc,layout){
+    //making the main svg
+    svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("width",pre_calc.w);
+    svg.setAttribute("height",pre_calc.h);
+    svg.setAttribute("viewBox","0 0 "+pre_calc.w+" "+pre_calc.h);
+    svg.setAttribute("style",layout.styles)
+    DOM_container.appendChild(svg);
+
+    //making the grid
+    dy=pre_calc.h_graph/(layout.yaxes.no_parts-1);
+    dx=pre_calc.w_graph/(pre_calc.mostdataset_length);
+    
+    y_axes_stroke_width=layout.yaxes.stroke_width;
+    y_axes_stroke_color=layout.yaxes.stroke;
+    y_axes_stroke_dasharray=layout.yaxes.style;
+    y_axes_domain=layout.yaxes.domain;
+
+    x_axes_stroke_width=layout.xaxes.stroke_width;
+    x_axes_stroke_color=layout.xaxes.stroke;
+    x_axes_stroke_dasharray=layout.xaxes.style;
+
+
+    if (y_axes_domain != "auto") {
+        y_min = y_axes_domain[0]; //here we set the domain of y axis
+        y_max = y_axes_domain[1];
+    }
+    
+    //y axes
+    yaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.yaxes.visible){
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",pad);
+        line.setAttribute("y1",dy*i+pad);
+        line.setAttribute("x2",pad+pre_calc.w_graph);
+        line.setAttribute("y2",dy*i+pad);
+        line.setAttribute("stroke",y_axes_stroke_color);
+        line.setAttribute("stroke-width",y_axes_stroke_width);
+        switch(y_axes_stroke_dasharray){
+            case "solid":
+                line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                line.setAttribute("stroke-dasharray","3,5");
+                break;
+            case "dotted":
+                line.setAttribute("stroke-dasharray","1,3");
+                break;
+        }
+
+        yaxes_grp.appendChild(line);
+    }}
+
+    //x axes
+    xaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.xaxes.visible){     
+        for(i=0;i<=pre_calc.mostdataset_length;i++){
+            line=document.createElementNS("http://www.w3.org/2000/svg","line");
+            line.setAttribute("x1",pad+dx*i);
+            line.setAttribute("y1",pad);
+            line.setAttribute("x2",dx*i+pad);
+            line.setAttribute("y2",pad+pre_calc.h_graph);
+            line.setAttribute("stroke",x_axes_stroke_color);
+            line.setAttribute("stroke-width",x_axes_stroke_width);
+            switch(x_axes_stroke_dasharray){
+                case "solid":
+                    line.setAttribute("stroke-dasharray","none");
+                    break;
+                case "dashed":
+                    line.setAttribute("stroke-dasharray","4,5");
+                    break;
+                case "dotted":
+                    line.setAttribute("stroke-dasharray","1,3");
+                    break;
+            }     
+
+            xaxes_grp.appendChild(line);
+        }
+    }
+
+    //adding the grid to the main svg
+    svg.appendChild(yaxes_grp);
+    svg.appendChild(xaxes_grp);
+
+
+}
+
+function makeGridBarH(DOM_container,pre_calc,layout){
+
+    //making the main svg
+    //making the main svg
+    svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("width",pre_calc.w);
+    svg.setAttribute("height",pre_calc.h);
+    svg.setAttribute("viewBox","0 0 "+pre_calc.w+" "+pre_calc.h);
+    svg.setAttribute("style",layout.styles)
+    DOM_container.appendChild(svg);
+
+    //making the grid
+    dy=pre_calc.w_graph/(layout.yaxes.no_parts-1);
+    dx=pre_calc.h_graph/(pre_calc.mostdataset_length);
+
+    y_axes_stroke_width=layout.yaxes.stroke_width;
+    y_axes_stroke_color=layout.yaxes.stroke;
+    y_axes_stroke_dasharray=layout.yaxes.style;
+    y_axes_domain=layout.yaxes.domain;
+
+    x_axes_stroke_width=layout.xaxes.stroke_width;
+    x_axes_stroke_color=layout.xaxes.stroke;
+    x_axes_stroke_dasharray=layout.xaxes.style;
+
+    
+    if (y_axes_domain != "auto") {
+        y_min = y_axes_domain[0]; //here we set the domain of y axis
+        y_max = y_axes_domain[1];
+    }
+
+    //y axes
+    yaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.yaxes.visible){
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1",pad+dy*i);
+        line.setAttribute("y1",pad);
+        line.setAttribute("x2",pad+dy*i);
+        line.setAttribute("y2",pad+pre_calc.h_graph);
+        line.setAttribute("stroke",y_axes_stroke_color);
+        line.setAttribute("stroke-width",y_axes_stroke_width);
+        switch(y_axes_stroke_dasharray){
+            case "solid":
+                line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                line.setAttribute("stroke-dasharray","3,5");
+                break;
+            case "dotted":
+                line.setAttribute("stroke-dasharray","1,3");
+                break;
+        }
+
+        yaxes_grp.appendChild(line);
+    }}
+
+    
+    //x axes
+    xaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.xaxes.visible){     
+        for(i=0;i<=pre_calc.mostdataset_length;i++){
+            line=document.createElementNS("http://www.w3.org/2000/svg","line");
+            line.setAttribute("x1",pad);
+            line.setAttribute("y1",pad+dx*i);
+            line.setAttribute("x2",pad+pre_calc.w_graph);
+            line.setAttribute("y2",pad+dx*i);
+            line.setAttribute("stroke",x_axes_stroke_color);
+            line.setAttribute("stroke-width",x_axes_stroke_width);
+            switch(x_axes_stroke_dasharray){
+                case "solid":
+                    line.setAttribute("stroke-dasharray","none");
+                    break;
+                case "dashed":
+                    line.setAttribute("stroke-dasharray","4,5");
+                    break;
+                case "dotted":
+                    line.setAttribute("stroke-dasharray","1,3");
+                    break;
+            }     
+
+            xaxes_grp.appendChild(line);
+        }
+    }
+
+    //adding the grid to the main svg
+    svg.appendChild(yaxes_grp);
+    svg.appendChild(xaxes_grp);
+ 
+
+
+
+    
+
+}
+
+function makeTitle(DOM_container,layout){
+    //making the title
+    title=document.createElementNS("http://www.w3.org/2000/svg","text");
+    title.setAttribute("x",layout.width/2);
+    title.setAttribute("y",layout.padding/2);
+    title.setAttribute("text-anchor","middle");
+    title.setAttribute("font-size",layout.title.font_size);
+    title.setAttribute("font-family",layout.title.font_family);
+    title.setAttribute("font-weight",layout.title.font_weight);
+    title.setAttribute("fill",layout.title.color);
+    title.setAttribute("anti-alias","true");
+    title.innerHTML=layout.title.text;
+    svg.appendChild(title);
+
+    //making x and y axes title
+    x_title=document.createElementNS("http://www.w3.org/2000/svg","text");
+    x_title.setAttribute("x",layout.width/2);
+    x_title.setAttribute("y",layout.height-layout.padding/2);
+    x_title.setAttribute("text-anchor","middle");
+    x_title.setAttribute("font-size",layout.xaxes.title.font_size);
+    x_title.setAttribute("font-family",layout.xaxes.title.font_family);
+    x_title.setAttribute("font-weight",layout.xaxes.title.font_weight);
+    x_title.setAttribute("fill",layout.xaxes.title.color);
+    x_title.setAttribute("anti-alias","true");
+    x_title.innerHTML=layout.xaxes.title.text;
+    svg.appendChild(x_title);
+
+    y_title=document.createElementNS("http://www.w3.org/2000/svg","text");
+    y_title.setAttribute("x",layout.padding/2);
+    y_title.setAttribute("y",layout.height/2);
+    y_title.setAttribute("text-anchor","middle");
+    y_title.setAttribute("font-size",layout.yaxes.title.font_size);
+    y_title.setAttribute("font-family",layout.yaxes.title.font_family);
+    y_title.setAttribute("font-weight",layout.yaxes.title.font_weight);
+    y_title.setAttribute("fill",layout.yaxes.title.color);
+    y_title.setAttribute("anti-alias","true");
+    y_title.setAttribute("transform","rotate(-90,"+layout.padding/2+","+layout.height/2+")");
+    y_title.innerHTML=layout.yaxes.title.text;
+    svg.appendChild(y_title);
+
+
+}
+
+function makeLabels(DOM_container,pre_calc,layout){
+    //making the labels
+    ylabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    xlabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    if(layout.ylabels.visible){
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        var ylbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        ylbl.setAttribute("x",pad-5);
+        ylbl.setAttribute("y",pre_calc.h-(dy*i)-pad);
+        ylbl.setAttribute("text-anchor","end");
+        ylbl.setAttribute("font-size",layout.ylabels.font_size);
+        ylbl.setAttribute("font-family",layout.ylabels.font_family);
+        ylbl.setAttribute("font-weight",layout.ylabels.font_weight);
+        ylbl.setAttribute("fill",layout.ylabels.color);
+        ylbl.setAttribute("alignment-baseline","middle");
+        ylbl.setAttribute("anti-alias","true");
+        ylbl.innerHTML=pre_calc.yaxes_labels[i];
+        ylabel_grp.appendChild(ylbl);
+    }}
+
+    if(layout.xlabels.visible){
+    for(i=0;i<pre_calc.mostdataset_length;i++){
+        var xlbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        xlbl.setAttribute("x",dx*i+pad);
+        xlbl.setAttribute("y",pre_calc.h-pad+layout.xlabels.font_size);
+        xlbl.setAttribute("text-anchor","middle");
+        xlbl.setAttribute("font-size",layout.xlabels.font_size);
+        xlbl.setAttribute("font-family",layout.xlabels.font_family);
+        xlbl.setAttribute("font-weight",layout.xlabels.font_weight);
+        xlbl.setAttribute("fill",layout.xlabels.color);
+        xlbl.setAttribute("anti-alias","true");
+        xlbl.innerHTML=layout.xlabels.labels[i];
+        xlabel_grp.appendChild(xlbl);
+    }}
+
+    svg.appendChild(ylabel_grp);
+    svg.appendChild(xlabel_grp);
+}
+
+function makeLabelsBar(DOM_container,pre_calc,layout){
+    //making the labels
+    ylabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    xlabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        var ylbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        ylbl.setAttribute("x",pad-5);
+        ylbl.setAttribute("y",pre_calc.h-(dy*i)-pad);
+        ylbl.setAttribute("text-anchor","end");
+        ylbl.setAttribute("font-size",layout.ylabels.font_size);
+        ylbl.setAttribute("font-family",layout.ylabels.font_family);
+        ylbl.setAttribute("font-weight",layout.ylabels.font_weight);
+        ylbl.setAttribute("fill",layout.ylabels.color);
+        ylbl.setAttribute("alignment-baseline","middle");
+        ylbl.setAttribute("anti-alias","true");
+        ylbl.innerHTML=pre_calc.yaxes_labels[i];
+        ylabel_grp.appendChild(ylbl);
+    }
+
+    for(i=0;i<pre_calc.mostdataset_length;i++){
+        var xlbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        xlbl.setAttribute("x",dx*i+pad+dx/2);
+        xlbl.setAttribute("y",pre_calc.h-pad+layout.xlabels.font_size);
+        xlbl.setAttribute("text-anchor","middle");
+        xlbl.setAttribute("font-size",layout.xlabels.font_size);
+        xlbl.setAttribute("font-family",layout.xlabels.font_family);
+        xlbl.setAttribute("font-weight",layout.xlabels.font_weight);
+        xlbl.setAttribute("fill",layout.xlabels.color);
+        xlbl.setAttribute("anti-alias","true");
+        xlbl.innerHTML=layout.xlabels.labels[i];
+        xlabel_grp.appendChild(xlbl);
+    }
+
+    svg.appendChild(ylabel_grp);
+    svg.appendChild(xlabel_grp);
+}
+
+function makeLabelsBarH(DOM_container,pre_calc,layout){
+    //making the labels
+    ylabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    xlabel_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    for(i=0;i<layout.yaxes.no_parts;i++){
+        var ylbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        ylbl.setAttribute("x",dy*i+pad);
+        ylbl.setAttribute("y",pre_calc.h-pad+layout.xlabels.font_size);
+        ylbl.setAttribute("text-anchor","middle");
+        ylbl.setAttribute("font-size",layout.ylabels.font_size);
+        ylbl.setAttribute("font-family",layout.ylabels.font_family);
+        ylbl.setAttribute("font-weight",layout.ylabels.font_weight);
+        ylbl.setAttribute("fill",layout.ylabels.color);
+        ylbl.setAttribute("alignment-baseline","middle");
+        ylbl.setAttribute("anti-alias","true");
+        ylbl.innerHTML=pre_calc.yaxes_labels[i];
+        ylabel_grp.appendChild(ylbl);
+    }
+
+    for(i=0;i<pre_calc.mostdataset_length;i++){
+        var xlbl= document.createElementNS("http://www.w3.org/2000/svg","text");
+        xlbl.setAttribute("x",pad-5);
+        xlbl.setAttribute("y",pre_calc.h-(dx*i)-pad-dx/2);
+        xlbl.setAttribute("text-anchor","end");
+        xlbl.setAttribute("font-size",layout.xlabels.font_size);
+        xlbl.setAttribute("font-family",layout.xlabels.font_family);
+        xlbl.setAttribute("font-weight",layout.xlabels.font_weight);
+        xlbl.setAttribute("fill",layout.xlabels.color);
+        xlbl.setAttribute("anti-alias","true");
+        xlbl.setAttribute("alignment-baseline","middle")
+        xlbl.innerHTML=layout.xlabels.labels[i];
+        xlabel_grp.appendChild(xlbl);
+    }
+
+    svg.appendChild(ylabel_grp);
+    svg.appendChild(xlabel_grp);
+}
+
+function makeLegend(DOM_container,pre_calc,graphData,layout){
+    //making the legend
+    if(layout.legend.visible){
+    legend_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+    for(dataindex=0;dataindex<graphData.length;dataindex++){
+        var legend_line=document.createElementNS("http://www.w3.org/2000/svg","line");
+        var legend_marker=document.createElementNS("http://www.w3.org/2000/svg","circle");
+        var legend_text=document.createElementNS("http://www.w3.org/2000/svg","text");
+
+
+        switch(layout.legend.position){
+            case "top-right":
+                legend_line.setAttribute("x1",layout.width-layout.padding+layout.legend.padding);
+                legend_line.setAttribute("y1",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+                legend_line.setAttribute("x2",layout.width-layout.padding+layout.legend.padding+2*layout.legend.font_size);
+                legend_line.setAttribute("y2",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+                
+                legend_marker.setAttribute("cx",layout.width-layout.padding+layout.legend.padding+layout.legend.font_size);
+                legend_marker.setAttribute("cy",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+
+                legend_text.setAttribute("x",layout.width-layout.padding+2*layout.legend.padding+2*layout.legend.font_size);
+                legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+                break;
+            case "top-left":
+                legend_line.setAttribute("x1",layout.legend.padding);
+                legend_line.setAttribute("y1",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+                legend_line.setAttribute("x2",layout.legend.padding+2*layout.legend.font_size);
+                legend_line.setAttribute("y2",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+
+                legend_marker.setAttribute("cx",layout.legend.padding+layout.legend.font_size);
+                legend_marker.setAttribute("cy",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+
+                legend_text.setAttribute("x",layout.legend.padding+2*layout.legend.font_size+layout.legend.padding);
+                legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
+                break;
+            case "bottom-right":
+                legend_line.setAttribute("x1",layout.width-layout.padding+layout.legend.padding);
+                legend_line.setAttribute("y1",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+                legend_line.setAttribute("x2",layout.width-layout.padding+layout.legend.padding+2*layout.legend.font_size);
+                legend_line.setAttribute("y2",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+
+                legend_marker.setAttribute("cx",layout.width-layout.padding+layout.legend.padding+layout.legend.font_size);
+                legend_marker.setAttribute("cy",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+
+                legend_text.setAttribute("x",layout.width-layout.padding+2*layout.legend.padding+2*layout.legend.font_size);
+                legend_text.setAttribute("y",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+                break;
+            case "bottom-left":
+                legend_line.setAttribute("x1",layout.legend.padding);
+                legend_line.setAttribute("y1",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+                legend_line.setAttribute("x2",layout.legend.padding+2*layout.legend.font_size);
+                legend_line.setAttribute("y2",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+                
+                legend_marker.setAttribute("cx",layout.legend.padding+layout.legend.font_size);
+                legend_marker.setAttribute("cy",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+
+                legend_text.setAttribute("x",layout.legend.padding+2*layout.legend.font_size+layout.legend.padding);
+                legend_text.setAttribute("y",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
+                break;
+        }
+        
+        legend_line.setAttribute("stroke",graphData[dataindex].line.color||"#000000");
+        legend_line.setAttribute("stroke-width",graphData[dataindex].line.width||0);
+        legend_line.setAttribute("stroke-linecap",graphData[dataindex].line.stroke_linecap||"round");
+        legend_line.setAttribute("stroke-linejoin",graphData[dataindex].line.stroke_linejoin||"round");
+        // applying line style to legend
+        switch(graphData[dataindex].line.style){
+            case "solid":
+                legend_line.setAttribute("stroke-dasharray","none");
+                break;
+            case "dashed":
+                legend_line.setAttribute("stroke-dasharray","3,5");
+                break;
+            case "dotted":
+                legend_line.setAttribute("stroke-dasharray","0.2,5");
+                break;
+            case "dash-dot":
+                legend_line.setAttribute("stroke-dasharray","3,5,0.2,5");
+                break;
+            case "spaced-dot":
+                legend_line.setAttribute("stroke-dasharray","0.2,8");
+                break;
+            case "spaced-dash":
+                legend_line.setAttribute("stroke-dasharray","4,8");
+                break;
+            case "long-dash":
+                legend_line.setAttribute("stroke-dasharray","8,8");
+                break;
+        }
+        
+        if(graphData[dataindex].marker.visible){
+        legend_marker.setAttribute("r",graphData[dataindex].marker.size);
+        legend_marker.setAttribute("fill",graphData[dataindex].marker.fill);
+        legend_marker.setAttribute("stroke",graphData[dataindex].marker.color);
+        }
+
+        legend_text.setAttribute("text-anchor","start");
+        legend_text.setAttribute("font-size",layout.legend.font_size);
+        legend_text.setAttribute("font-family",layout.legend.font_family);
+        legend_text.setAttribute("font-weight",layout.legend.font_weight);
+        legend_text.setAttribute("fill",layout.legend.color);
+        legend_text.setAttribute("alignment-baseline","middle");
+        legend_text.setAttribute("anti-alias","true");
+        legend_text.innerHTML=graphData[dataindex].name;
+
+        if(graphData[dataindex].line.visible!=false){
+            graphData[dataindex].line.visible=true
+        }
+        if(graphData[dataindex].marker.visible!=false){
+            graphData[dataindex].marker.visible=true
+        }
+
+    if(graphData[dataindex].line.visible){
+        legend_grp.appendChild(legend_line);
+    }
+    if(graphData[dataindex].marker.visible){
+        legend_grp.appendChild(legend_marker);
+    }
+        legend_grp.appendChild(legend_text);
+    }
+    svg.appendChild(legend_grp);
+}
 }
 
 
-//make sure to make gradients after the graph function.
+////////////////////////////////////////////////////////
+///////////////  Drawing the Graph /////////////////////
 
-function makeGradient(style,colors,id,spread_method){
-    var svgelem=document.getElementsByTagName('svg')[0];
-    grad_spread_method=spread_method||"pad";
-    if(style=="horizontal"){
-        var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-        var grad=document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
-        grad.setAttribute('id',id);
-        grad.setAttribute('x1','0%');
-        grad.setAttribute('y1','0%');
-        grad.setAttribute('x2','100%');
-        grad.setAttribute('y2','0%');
-        grad.setAttribute('spreadMethod',grad_spread_method);
-        for(i=0;i<colors.length;i++){
-            stop=document.createElementNS('http://www.w3.org/2000/svg','stop');
-            if(typeof(colors[i])=="string"){
-                stop.setAttribute('offset',(i*100/colors.length)+'%');
-                stop.setAttribute('stop-color',colors[i]);
-                grad.appendChild(stop);}
-                else if(typeof(colors[i])=="object"){
-                    stop.setAttribute('offset',colors[i][0]);
-                    stop.setAttribute('stop-color',colors[i][1]);
-                    grad.appendChild(stop);
-                   
-                }
+class lineGraph{
+    constructor(DOM_container,graphData,layout){
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc = graph_precalculate(this.graphData,this.layout);
+        makeGrid(this.DOM_container,this.pre_calc,this.layout);
+        makeTitle(this.DOM_container,this.layout);
+        makeLabels(this.DOM_container,this.pre_calc,this.layout);
+        makeLegend(this.DOM_container,this.pre_calc,this.graphData,this.layout);
+        //making points and lines
+        dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
+        dx=this.pre_calc.w_graph/(this.pre_calc.mostdataset_length-1);
+    
+
+        for(dataindex=0;dataindex<this.graphData.length;dataindex++){
+
+            var data = this.graphData[dataindex];
+            var data_x = data.x;
+            var data_y = data.y;
+            if(data.visible == false){
+                continue;
+            }
+
+            var line_color=data.line.color;
+            var line_width=data.line.width || 2;
+            var line_fill=data.line.fill||"none";
+            var line_fillstyle=data.line.fill_style||"from-min";
+            var line_style=data.line.style || "solid";
+            var line_linecap=data.line.linecap || "round";
+            var line_linejoin=data.line.linejoin || "round";
+            var line_visible=data.line.visible;
+            if(line_visible!=false){
+                line_visible=true;
+            }
+
+            var marker_size=data.marker.size;
+            var marker_color=data.marker.color;
+            var marker_fill=data.marker.fill;
+            var marker_visible=data.marker.visible||false;
+            var polyline_str=" ";
+            var marker_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+
+            for(i=0;i <data_x.length ; i++){
+                var y = data_y[i];
+                var x_pos = pad+dx*i;
+                var y_pos = pad+this.pre_calc.h_graph-(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
+               
+                //markers
+                if(marker_visible){
+                var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+                circle.setAttribute("cx",x_pos);
+                circle.setAttribute("cy",y_pos);
+                circle.setAttribute("r",marker_size);
+                circle.setAttribute("stroke",marker_color);
+                circle.setAttribute("fill",marker_fill);
+                marker_grp.appendChild(circle);
+            }
+
+                //lines
+                polyline_str+=x_pos+","+y_pos+" ";
+
+            }
+
+             // defining points for fill
+             switch(line_fillstyle){
+                case "none":
+                    break;
+                case "from-min":
+                    var x1=this.pre_calc.pad;
+                    var y1=this.pre_calc.h-this.pre_calc.pad;
+                    var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                    var y2=this.pre_calc.h-this.pre_calc.pad;
+                    var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
+                    break;
+                case "from-max":
+                    var x1=this.pre_calc.pad;
+                    var y1=this.pre_calc.pad;
+                    var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                    var y2=this.pre_calc.pad;
+                    var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
+                    break;
+                case "from-zero":
+                    if(this.pre_calc.y_min>0){
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.h-this.pre_calc.pad;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.pad;
+                        var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
+                    }
+                    else if(this.pre_calc.y_max<0){
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.h-this.pre_calc.pad;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.h-this.pre_calc.pad;
+                        var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
+                    }
+                    else{
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.zeroval_coord;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.zeroval_coord;
+                        var fill_str=x1+","+y1+" "+polyline_str+" "+ x2+","+y2+" ";
+                    }
+
+                    
+             }
+
+
+
+             if(line_visible){
+            var polyline=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+            polyline.setAttribute("points",polyline_str);
+            polyline.setAttribute("stroke",line_color);
+            polyline.setAttribute("stroke-width",line_width);
+            polyline.setAttribute("stroke-linecap",line_linecap);
+            polyline.setAttribute("stroke-linejoin",line_linejoin);
+            polyline.setAttribute("fill","none");
+            switch(line_style){
+                case "solid":
+                    polyline.setAttribute("stroke-dasharray","none");
+                    break;
+                case "dashed":
+                    polyline.setAttribute("stroke-dasharray","3,5");
+                    break;
+                case "dotted":
+                    polyline.setAttribute("stroke-dasharray","0.2,5");
+                    break;
+                case "dash-dot":
+                    polyline.setAttribute("stroke-dasharray","3,5,0.2,5");
+                    break;
+                case "spaced-dot":
+                    polyline.setAttribute("stroke-dasharray","0.2,8");
+                    break;
+                case "spaced-dash":
+                    polyline.setAttribute("stroke-dasharray","4,8");
+                    break;
+                case "long-dash":
+                    polyline.setAttribute("stroke-dasharray","8,8");
+                    break;
+            }
+
+            var filline=document.createElementNS("http://www.w3.org/2000/svg","polyline");
+            filline.setAttribute("points",fill_str);
+            filline.setAttribute("stroke","none");
+            filline.setAttribute("stroke-width",0);
+            filline.setAttribute("fill",line_fill);
+            filline.setAttribute("stroke-linecap",line_linecap);
+            filline.setAttribute("stroke-linejoin",line_linejoin);
+            
+            
+            svg.appendChild(filline);
+            svg.appendChild(polyline);
         }
-        defs.appendChild(grad);
-        svgelem.appendChild(defs);
+            svg.appendChild(marker_grp);
+            
+        }
+       
+
+
+    }
+}
+
+
+class bezierGraph{
+    constructor(DOM_container,graphData,layout){
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc = graph_precalculate(this.graphData,this.layout);
+        makeGrid(this.DOM_container,this.pre_calc,this.layout);
+        makeTitle(this.DOM_container,this.layout);
+        makeLabels(this.DOM_container,this.pre_calc,this.layout);
+        makeLegend(this.DOM_container,this.pre_calc,this.graphData,this.layout);
+        //making points and lines
+        dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
+        dx=this.pre_calc.w_graph/(this.pre_calc.mostdataset_length-1);
+
+        for(dataindex=0;dataindex<this.graphData.length;dataindex++){
+            var points=[]; //points for calculating bezier curve
+            var pointsfill=[]; //points for filling
+            var data = this.graphData[dataindex];
+            var data_x = data.x;
+            var data_y = data.y;
+            if(data.visible == false){
+                continue;
+            }
+
+            var line_color=data.line.color;
+            var line_width=data.line.width || 2;
+            var line_fill=data.line.fill||"none";
+            var line_fillstyle=data.line.fill_style||"from-min";
+            var line_style=data.line.style || "solid";
+            var line_linecap=data.line.linecap || "round";
+            var line_linejoin=data.line.linejoin || "round";
+            var line_tension=data.line.tension || 0.2;
+            var line_visible=data.line.visible;
+            if(line_visible!=false){
+                line_visible=true;
+            }
+            var marker_size=data.marker.size;
+            var marker_color=data.marker.color;
+            var marker_fill=data.marker.fill;
+            var marker_visible=data.marker.visible||false;
+
+            var marker_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+
+            for(i=0;i <data_x.length ; i++){
+                var y = data_y[i];
+                var x_pos = pad+dx*i;
+                var y_pos = pad+this.pre_calc.h_graph-(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
+               
+                //markers
+                if(marker_visible){
+                var circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+                circle.setAttribute("cx",x_pos);
+                circle.setAttribute("cy",y_pos);
+                circle.setAttribute("r",marker_size);
+                circle.setAttribute("stroke",marker_color);
+                circle.setAttribute("fill",marker_fill);
+                marker_grp.appendChild(circle);
+            }
+
+                points.push([x_pos,y_pos]);
+                //lines
+
+            }
         
 
-    }
-    else if(style=="vertical"){
-        var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-        var grad=document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
-        grad.setAttribute('id',id);
-        grad.setAttribute('x1','0%');
-        grad.setAttribute('y1','0%');
-        grad.setAttribute('x2','0%');
-        grad.setAttribute('y2','100%');
-        grad.setAttribute('spreadMethod',grad_spread_method);
-        for(i=0;i<colors.length;i++){
-            stop=document.createElementNS('http://www.w3.org/2000/svg','stop');
-            if(typeof(colors[i])=="string"){
-                stop.setAttribute('offset',(i*100/colors.length)+'%');
-                stop.setAttribute('stop-color',colors[i]);
-                grad.appendChild(stop);}
-                else if(typeof(colors[i])=="object"){
-                    stop.setAttribute('offset',colors[i][0]);
-                    stop.setAttribute('stop-color',colors[i][1]);
-                    grad.appendChild(stop);
-                   
-                }
+            if(line_visible){
+            // Create the svg <path> element
+            var path= document.createElementNS("http://www.w3.org/2000/svg","path");
+            path.setAttribute('d',svgPath(points, bezierCommand,line_tension));
+            path.setAttribute('stroke',line_color);
+            path.setAttribute('stroke-width',line_width);
+            path.setAttribute('fill','none');
+            path.setAttribute('stroke-linecap',line_linecap);
+            path.setAttribute('stroke-linejoin',line_linejoin);
+            switch(line_style){
+                case "solid":
+                    path.setAttribute("stroke-dasharray","none");
+                    break;
+                case "dashed":
+                    path.setAttribute("stroke-dasharray","3,5");
+                    break;
+                case "dotted":
+                    path.setAttribute("stroke-dasharray","0.2,5");
+                    break;
+                case "dash-dot":
+                    path.setAttribute("stroke-dasharray","3,5,0.2,5");
+                    break;
+                case "spaced-dot":
+                    path.setAttribute("stroke-dasharray","0.2,8");
+                    break;
+                case "spaced-dash":
+                    path.setAttribute("stroke-dasharray","4,8");
+                    break;
+                case "long-dash":
+                    path.setAttribute("stroke-dasharray","8,8");
+                    break;
+            }
+
+            // Create the fill svg <path> element
+            var fillpath= document.createElementNS("http://www.w3.org/2000/svg","path");
+           switch(line_fillstyle){
+                case "none":
+                    break;
+                case "from-min":
+                    var x1=this.pre_calc.pad;
+                    var y1=this.pre_calc.h-this.pre_calc.pad;
+                    var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                    var y2=this.pre_calc.h-this.pre_calc.pad;
+                    var dval_fill =svgPath(points, bezierCommand,line_tension);
+                    dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
+                    fillpath.setAttribute('d',dval_fill);
+                    break;
+                case "from-max":
+                    var x1=this.pre_calc.pad;
+                    var y1=this.pre_calc.pad;
+                    var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                    var y2=this.pre_calc.pad;
+                    var dval_fill =svgPath(points, bezierCommand,line_tension);
+                    dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
+                    fillpath.setAttribute('d',dval_fill);
+                    break;
+                case "from-zero":
+                    if(this.pre_calc.y_min>0){
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.h-this.pre_calc.pad;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.pad;
+                        var dval_fill =svgPath(points, bezierCommand,line_tension);
+                        dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
+                        fillpath.setAttribute('d',dval_fill);
+                    }
+                    else if(this.pre_calc.y_max<0){
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.h-this.pre_calc.pad;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.h-this.pre_calc.pad;
+                        var dval_fill =svgPath(points, bezierCommand,line_tension);
+                        dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
+                        fillpath.setAttribute('d',dval_fill);
+                    }
+                    else{
+                        var x1=this.pre_calc.pad;
+                        var y1=this.pre_calc.zeroval_coord;
+                        var x2=this.pre_calc.pad+this.pre_calc.w_graph;
+                        var y2=this.pre_calc.zeroval_coord;
+                        var dval_fill =svgPath(points, bezierCommand,line_tension);
+                        dval_fill += " L"+x2+","+y2+"L"+x1+","+y1+"Z";
+                        fillpath.setAttribute('d',dval_fill);
+                    }
+
+
+            }
+            fillpath.setAttribute('stroke','none');
+            fillpath.setAttribute('stroke-width',0);
+            fillpath.setAttribute('fill',line_fill);
+            fillpath.setAttribute('stroke-linecap',line_linecap);
+            fillpath.setAttribute('stroke-linejoin',line_linejoin);
+            
+
+            
+            svg.appendChild(fillpath);
+            svg.appendChild(path);
         }
-        defs.appendChild(grad);
-        svgelem.appendChild(defs);
+            svg.appendChild(marker_grp);
+
+
+
+
+        }
+
+        
     }
-    else if(style=="radial"){
-        var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-        var grad=document.createElementNS('http://www.w3.org/2000/svg','radialGradient');
-        grad.setAttribute('id',id);
-        grad.setAttribute('cx','50%');
-        grad.setAttribute('cy','50%');
-        grad.setAttribute('r','50%');
-        grad.setAttribute('fx','50%');
-        grad.setAttribute('fy','50%');
-        grad.setAttribute('spreadMethod',grad_spread_method);
-        for(i=0;i<colors.length;i++){
-            stop=document.createElementNS('http://www.w3.org/2000/svg','stop');
-            if(typeof(colors[i])=="string"){
-            stop.setAttribute('offset',(i*100/colors.length)+'%');
-            stop.setAttribute('stop-color',colors[i]);
-            grad.appendChild(stop);}
-            else if(typeof(colors[i])=="object"){
-                stop.setAttribute('offset',colors[i][0]);
-                stop.setAttribute('stop-color',colors[i][1]);
-                grad.appendChild(stop);
-               
+
+}
+
+
+ ////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+        const svgPath = (points, command, line_tension) => {
+
+            dval = points.reduce((acc, point, i, a) => i === 0
+            ? `M ${point[0]},${point[1]}`
+            : `${acc} ${command(point, i, a, line_tension)}`
+            , '')
+
+            return dval
+            
+        }
+        
+        
+        const bline = (pointA, pointB) => {
+            const lengthX = pointB[0] - pointA[0]
+            const lengthY = pointB[1] - pointA[1]
+            return {
+            length: Math.sqrt(Math.pow(lengthX, 2) + Math.pow(lengthY, 2)),
+            angle: Math.atan2(lengthY, lengthX)
             }
         }
-        defs.appendChild(grad);
-        svgelem.appendChild(defs);
+        
+        const controlPoint = (current, previous, next, reverse,line_tension) => {
+
+            const p = previous || current
+            const n = next || current
+           
+            const smoothing = line_tension
+           
+            const o = bline(p, n)
+            const angle = o.angle + (reverse ? Math.PI : 0)
+            const length = o.length * smoothing
+            
+            const x = current[0] + Math.cos(angle) * length
+            const y = current[1] + Math.sin(angle) * length
+            return [x, y]
+        }
+        
+        const bezierCommand = (point, i, a,line_tension) => {
+            // start control point
+            const [cpsX, cpsY] = controlPoint(a[i - 1], a[i - 2], point,0,line_tension)
+            // end control point
+            const [cpeX, cpeY] = controlPoint(point, a[i - 1], a[i + 1], true,line_tension)
+            return `C ${cpsX},${cpsY} ${cpeX},${cpeY} ${point[0]},${point[1]}`
+        }
+
+       
+
+class scatterGraph{
+    constructor(DOM_container,graphData,layout){
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc=graph_precalculate(this.graphData,this.layout);
+        makeGrid(this.DOM_container,this.pre_calc,this.layout);
+        makeTitle(this.DOM_container,this.layout);
+        makeLabels(this.DOM_container,this.pre_calc,this.layout);
+        makeLegend(this.DOM_container,this.pre_calc,this.graphData,this.layout);
+        //making points
+        dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
+        dx=this.pre_calc.w_graph/(this.pre_calc.mostdataset_length-1);
+
+        for(dataindex=0; dataindex<this.graphData.length;dataindex++){
+
+            var data=this.graphData[dataindex];
+            var data_x=data.x;
+            var data_y=data.y;
+            if(data.visible==false){
+                continue;
+            }
+
+            var marker_size=data.marker.size;
+            var marker_fill=data.marker.fill;
+            var marker_color=data.marker.color;
+            var marker_visible=data.marker.visible||true;
+
+            var marker_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+
+            for(var i=0;i<data_x.length;i++){
+                var y =data_y[i];
+                var x_pos = pad + dx*i;
+                var y_pos = pad + this.pre_calc.h_graph -(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
+
+                //markers
+                if(marker_visible){
+                var circle=document.createElementNS("http://www.w3.org/2000/svg","circle");
+                circle.setAttribute('cx',x_pos);
+                circle.setAttribute('cy',y_pos);
+                circle.setAttribute('r',marker_size);
+                circle.setAttribute('fill',marker_fill);
+                circle.setAttribute('stroke',marker_color);
+                circle.setAttribute('stroke-width',1);
+                marker_grp.appendChild(circle);
+                }
+
+            }
+
+            svg.appendChild(marker_grp);
+
+
+        }
 
     }
 }
 
+
+
+class barGraph{
+    constructor(DOM_container,graphData,layout){
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc=graph_precalculate(this.graphData,this.layout);
+        makeGridBar(this.DOM_container,this.pre_calc,this.layout);
+        makeTitle(this.DOM_container,this.layout);
+        makeLabelsBar(this.DOM_container,this.pre_calc,this.layout);
+      //  makeLegend(this.DOM_container,this.pre_calc,this.graphData,this.layout);
+        //making bars
+        dy=this.pre_calc.h_graph/(layout.yaxes.no_parts-1);
+        dx=this.pre_calc.w_graph/(this.pre_calc.mostdataset_length);
+
+        for(dataindex=0; dataindex<this.graphData.length;dataindex++){
+
+            var data=this.graphData[dataindex];
+            var data_x=data.x;
+            var data_y=data.y;
+            if(data.visible==false){
+                continue;
+            }
+
+            var bar_width=data.bar.width || 50; //width percentage
+            var bar_fill=data.bar.fill;
+            var bar_stroke=data.bar.stroke||"none";
+            var bar_stroke_width=data.bar.stroke_width||0;
+            var bar_stroke_style=data.bar.stroke_style||"solid";
+            var bar_visible=data.bar.visible||true;
+            var bar_border_radius=data.bar.border_radius||0;
+            var bar_fill_style=data.bar.fill_style||"from-zero";
+            var bar_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+
+            var ic=0;
+            for(var i=0;i<data_x.length;i++){
+                var y=data_y[i];
+                var wp=dx*bar_width/100;
+                var x_pos = pad + dx*i+dx/2-wp/2;
+                var y_pos = pad + this.pre_calc.h_graph -(y-this.pre_calc.y_min)*this.pre_calc.map_ratio;
+
+                //bars
+                if(bar_visible){
+                    var rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+                    switch(bar_fill_style){
+                        case "from-min":
+                            rect.setAttribute('x',x_pos);
+                            rect.setAttribute('y',y_pos);
+                            rect.setAttribute('width',wp);
+                            rect.setAttribute('height',h_graph-y_pos+pad);
+                            break;
+                        case "from-zero":
+                            if(y>0){
+                                rect.setAttribute('x',x_pos);
+                                rect.setAttribute('y',y_pos);
+                                rect.setAttribute('width',wp);
+                                rect.setAttribute('height',this.pre_calc.zeroval_coord-y_pos);}
+                            else{
+                                rect.setAttribute('x',x_pos);
+                                rect.setAttribute('y',this.pre_calc.zeroval_coord);
+                                rect.setAttribute('width',wp);
+                                rect.setAttribute('height',y_pos-this.pre_calc.zeroval_coord);
+                            }
+                            break;
+                        case "from-max":
+                            rect.setAttribute('x',x_pos);
+                            rect.setAttribute('y',pad);
+                            rect.setAttribute('width',wp);
+                            rect.setAttribute('height',y_pos-pad);
+                            break;
+                    }
+
+                    if(typeof(bar_fill)=="object"){
+                        if(ic<bar_fill.length){
+                        var bar_fill_color=bar_fill[ic];
+                    ic++;}
+                        else{
+                            var bar_fill_color=bar_fill[ic-1];
+                            ic=0;
+                        }
+                        rect.setAttribute('fill',bar_fill_color);
+                    }
+                    else{
+                        rect.setAttribute('fill',bar_fill);
+                    }
+                    rect.setAttribute('stroke',bar_stroke);
+                    rect.setAttribute('stroke-width',bar_stroke_width);
+                    switch(bar_stroke_style){
+                        case "solid":
+                            rect.setAttribute("stroke-dasharray","none");
+                            break;
+                        case "dashed":
+                            rect.setAttribute("stroke-linecap","round");
+                            rect.setAttribute("stroke-dasharray","3,5");
+                            break;
+                        case "dotted":
+                            rect.setAttribute("stroke-linecap","round");
+                            rect.setAttribute("stroke-dasharray","0.2,5");
+                            break;
+                        case "dash-dot":
+                            rect.setAttribute("stroke-dasharray","3,5,0.2,5");
+                            break;
+                        case "spaced-dot":
+                            rect.setAttribute("stroke-dasharray","0.2,8");
+                            break;
+                        case "spaced-dash":
+                            rect.setAttribute("stroke-dasharray","4,8");
+                            break;
+                        case "long-dash":
+                            rect.setAttribute("stroke-dasharray","8,8");
+                            break;
+                    }
+        
+                    rect.setAttribute('rx',bar_border_radius);
+                    rect.setAttribute('ry',bar_border_radius);
+                    bar_grp.appendChild(rect);
+                }
+
+
+
+            }
+
+            svg.appendChild(bar_grp);
+
+        }
+    }
+}
+
+class horizontalBarGraph{
+    constructor(DOM_container,graphData,layout){
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc=graph_precalculate(this.graphData,this.layout);
+
+        makeGridBarH(this.DOM_container,this.pre_calc,this.layout);
+        makeTitle(this.DOM_container,this.layout);
+        makeLabelsBarH(this.DOM_container,this.pre_calc,this.layout);
+
+        dy=pre_calc.w_graph/(layout.yaxes.no_parts-1);
+        dx=pre_calc.h_graph/(pre_calc.mostdataset_length);
+
+        for(dataindex=0;dataindex<this.graphData.length;dataindex++){
+            
+            var data=this.graphData[dataindex];
+            var data_x=data.x;
+            var data_y=data.y;
+            if(data.visible==false){
+                continue;
+            }
+
+            var bar_width=data.bar.width || 50; //width percentage
+            var bar_fill=data.bar.fill;
+            var bar_stroke=data.bar.stroke||"none";
+            var bar_stroke_width=data.bar.stroke_width||0;
+            var bar_stroke_style=data.bar.stroke_style||"solid";
+            var bar_visible=data.bar.visible||true;
+            var bar_border_radius=data.bar.border_radius||0;
+            var bar_fill_style=data.bar.fill_style||"from-zero";
+            var bar_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
+
+            console.log(dx)
+            console.log(dy)
+
+            var map_ratioH= this.pre_calc.w_graph/(y_max-y_min)
+            var zeroval_coordH= pad + (0-y_min)*map_ratioH;
+            var ic=0;
+            for(var i=0;i<data_x.length;i++){
+                var y=data_y[i];
+                var wp=dx*bar_width/100;
+                var x_pos = pad + dx*i+dx/2-wp/2;
+                var y_pos = pad + (y-this.pre_calc.y_min)*map_ratioH;
+
+                //bars
+                if(bar_visible){
+                    var rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+                    switch(bar_fill_style){
+                        case "from-min":
+                            rect.setAttribute('x',pad);
+                            rect.setAttribute('y',pre_calc.h-(dx*i)-pad-dx/2-wp/2);
+                            rect.setAttribute('width',y_pos);
+                            rect.setAttribute('height',wp);
+                            break;
+                        case "from-zero":
+                            if(y>0){
+                                rect.setAttribute('x',zeroval_coordH);
+                                rect.setAttribute('y',pre_calc.h-(dx*i)-pad-dx/2-wp/2);
+                                rect.setAttribute('width',y_pos-zeroval_coordH);
+                                rect.setAttribute('height',wp);}
+                            else{
+                                rect.setAttribute('x',y_pos);
+                                rect.setAttribute('y',pre_calc.h-(dx*i)-pad-dx/2-wp/2);
+                                rect.setAttribute('width',zeroval_coordH-y_pos);
+                                rect.setAttribute('height',wp);
+                            }
+                            break;
+                        case "from-max":
+                            rect.setAttribute('x',y_pos);
+                            rect.setAttribute('y',pre_calc.h-(dx*i)-pad-dx/2-wp/2);
+                            rect.setAttribute('width',this.pre_calc.w_graph+pad-y_pos);
+                            rect.setAttribute('height',wp);
+                            break;
+                    }
+
+                    if(typeof(bar_fill)=="object"){
+                        if(ic<bar_fill.length){
+                        var bar_fill_color=bar_fill[ic];
+                    ic++;}
+                        else{
+                            var bar_fill_color=bar_fill[ic-1];
+                            ic=0;
+                        }
+                        rect.setAttribute('fill',bar_fill_color);
+                    }
+                    else{
+                        rect.setAttribute('fill',bar_fill);
+                    }
+                    rect.setAttribute('stroke',bar_stroke);
+                    rect.setAttribute('stroke-width',bar_stroke_width);
+                    switch(bar_stroke_style){
+                        case "solid":
+                            rect.setAttribute("stroke-dasharray","none");
+                            break;
+                        case "dashed":
+                            rect.setAttribute("stroke-linecap","round");
+                            rect.setAttribute("stroke-dasharray","3,5");
+                            break;
+                        case "dotted":
+                            rect.setAttribute("stroke-linecap","round");
+                            rect.setAttribute("stroke-dasharray","0.2,5");
+                            break;
+                        case "dash-dot":
+                            rect.setAttribute("stroke-dasharray","3,5,0.2,5");
+                            break;
+                        case "spaced-dot":
+                            rect.setAttribute("stroke-dasharray","0.2,8");
+                            break;
+                        case "spaced-dash":
+                            rect.setAttribute("stroke-dasharray","4,8");
+                            break;
+                        case "long-dash":
+                            rect.setAttribute("stroke-dasharray","8,8");
+                            break;
+                    }
+        
+                    rect.setAttribute('rx',bar_border_radius);
+                    rect.setAttribute('ry',bar_border_radius);
+                    bar_grp.appendChild(rect);
+                }
+
+
+
+            }
+
+            svg.appendChild(bar_grp);
+        }
+    }
+
+}
+
+class stackedBarGraph{
+    constructor(DOM_container,graphData,layout){
+        this.DOM_container=DOM_container;
+        this.graphData=graphData;
+        this.layout=layout;
+        this.pre_calc=graph_precalculate(this.graphData,this.layout);
+
+        makeGridBar(this.DOM_container,this.pre_calc,this.layout);
+        makeTitle(this.DOM_container,this.layout);
+        makeLabelsBar(this.DOM_container,this.pre_calc,this.layout);
+
+        dy=pre_calc.h_graph/(layout.yaxes.no_parts-1);
+        dx=pre_calc.w_graph/(pre_calc.mostdataset_length);
+
+        for(dataindex=0;dataindex<this.graphData.length;dataindex++){
+          
+
+
+
+        
+    }
+}
+}
