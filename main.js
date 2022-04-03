@@ -1,5 +1,5 @@
 /*
-Name :  Not decided
+Name :  project-G
 Creator / Author : Prakrisht Dahiya
 */
 
@@ -124,6 +124,10 @@ function makeGrid(DOM_container,pre_calc,layout){
 
         yaxes_grp.appendChild(line);
     }
+    
+
+
+    
     }
     //x axes
     xaxes_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
@@ -354,6 +358,37 @@ function makeTitle(DOM_container,layout){
     title.setAttribute("anti-alias","true");
     title.innerHTML=layout.title.text;
     svg.appendChild(title);
+
+    //making x and y axes title
+    if(layout.yaxes.title.visible){
+    x_title=document.createElementNS("http://www.w3.org/2000/svg","text");
+    x_title.setAttribute("x",layout.width/2);
+    x_title.setAttribute("y",layout.height-layout.padding/2);
+    x_title.setAttribute("text-anchor","middle");
+    x_title.setAttribute("font-size",layout.xaxes.title.font_size);
+    x_title.setAttribute("font-family",layout.xaxes.title.font_family);
+    x_title.setAttribute("font-weight",layout.xaxes.title.font_weight);
+    x_title.setAttribute("fill",layout.xaxes.title.color);
+    x_title.setAttribute("anti-alias","true");
+    x_title.innerHTML=layout.xaxes.title.text;
+    svg.appendChild(x_title);
+    }
+
+    if(layout.yaxes.title.visible){
+    y_title=document.createElementNS("http://www.w3.org/2000/svg","text");
+    y_title.setAttribute("x",layout.padding/2);
+    y_title.setAttribute("y",layout.height/2);
+    y_title.setAttribute("text-anchor","middle");
+    y_title.setAttribute("font-size",layout.yaxes.title.font_size);
+    y_title.setAttribute("font-family",layout.yaxes.title.font_family);
+    y_title.setAttribute("font-weight",layout.yaxes.title.font_weight);
+    y_title.setAttribute("fill",layout.yaxes.title.color);
+    y_title.setAttribute("anti-alias","true");
+    y_title.setAttribute("transform","rotate(-90,"+layout.padding/2+","+layout.height/2+")");
+    y_title.innerHTML=layout.yaxes.title.text;
+    svg.appendChild(y_title);
+    }
+
 }
 
 function makeLabels(DOM_container,pre_calc,layout){
