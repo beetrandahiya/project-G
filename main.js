@@ -360,7 +360,8 @@ function makeTitle(DOM_container,layout){
     svg.appendChild(title);
 
     //making x and y axes title
-    if(layout.yaxes.title.visible){
+    
+    if(layout.xaxes.title.visible!=false){
     x_title=document.createElementNS("http://www.w3.org/2000/svg","text");
     x_title.setAttribute("x",layout.width/2);
     x_title.setAttribute("y",layout.height-layout.padding/2);
@@ -374,7 +375,7 @@ function makeTitle(DOM_container,layout){
     svg.appendChild(x_title);
     }
 
-    if(layout.yaxes.title.visible){
+    if(layout.yaxes.title.visible!=false){
     y_title=document.createElementNS("http://www.w3.org/2000/svg","text");
     y_title.setAttribute("x",layout.padding/2);
     y_title.setAttribute("y",layout.height/2);
@@ -566,8 +567,8 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 break;
         }
         
-        legend_line.setAttribute("stroke",graphData[dataindex].line.color||"#000000");
-        legend_line.setAttribute("stroke-width",graphData[dataindex].line.width||0);
+        legend_line.setAttribute("stroke",graphData[dataindex].line.color);
+        legend_line.setAttribute("stroke-width",graphData[dataindex].line.width||2);
         legend_line.setAttribute("stroke-linecap",graphData[dataindex].line.stroke_linecap||"round");
         legend_line.setAttribute("stroke-linejoin",graphData[dataindex].line.stroke_linejoin||"round");
         // applying line style to legend
@@ -595,11 +596,10 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 break;
         }
         
-        if(graphData[dataindex].marker.visible){
         legend_marker.setAttribute("r",graphData[dataindex].marker.size);
         legend_marker.setAttribute("fill",graphData[dataindex].marker.fill);
         legend_marker.setAttribute("stroke",graphData[dataindex].marker.color);
-        }
+        
 
         legend_text.setAttribute("text-anchor","start");
         legend_text.setAttribute("font-size",layout.legend.font_size);
@@ -610,23 +610,112 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
         legend_text.setAttribute("anti-alias","true");
         legend_text.innerHTML=graphData[dataindex].name;
 
-        if(graphData[dataindex].line.visible!=false){
-            graphData[dataindex].line.visible=true
-        }
-        if(graphData[dataindex].marker.visible!=false){
-            graphData[dataindex].marker.visible=true
-        }
+      
 
-    if(graphData[dataindex].line.visible){
+    if(graphData[dataindex].line.visible!==false){
         legend_grp.appendChild(legend_line);
+        legend_grp.appendChild(legend_text);
+
     }
-    if(graphData[dataindex].marker.visible){
+    if(graphData[dataindex].marker.visible!==false){
         legend_grp.appendChild(legend_marker);
     }
-        legend_grp.appendChild(legend_text);
     }
     svg.appendChild(legend_grp);
 }
+}
+
+////////////////////////////////////////////////////////
+//////////////// Making Gradients //////////////////////
+
+//make sure to make gradients after the graph function.
+
+function makeGradient(DOM_identifier,style,colors,id,spread_method){
+
+    var svgelem = DOM_identifier.getElementsByTagName("svg")[0];
+    grad_spread_method=spread_method||"pad";
+    if(style=="horizontal"){
+        var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        var grad=document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+        grad.setAttribute('id',id);
+        grad.setAttribute('x1','0%');
+        grad.setAttribute('y1','0%');
+        grad.setAttribute('x2','100%');
+        grad.setAttribute('y2','0%');
+        grad.setAttribute('spreadMethod',grad_spread_method);
+        grad.setAttribute('gradientUnits','userSpaceOnUse');
+        for(i=0;i<colors.length;i++){
+            stop=document.createElementNS('http://www.w3.org/2000/svg','stop');
+            if(typeof(colors[i])=="string"){
+                stop.setAttribute('offset',(i*100/colors.length)+'%');
+                stop.setAttribute('stop-color',colors[i]);
+                grad.appendChild(stop);}
+                else if(typeof(colors[i])=="object"){
+                    stop.setAttribute('offset',colors[i][0]);
+                    stop.setAttribute('stop-color',colors[i][1]);
+                    grad.appendChild(stop);
+                   
+                }
+        }
+        defs.appendChild(grad);
+        svgelem.appendChild(defs);
+        
+
+    }
+    else if(style=="vertical"){
+        var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        var grad=document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+        grad.setAttribute('id',id);
+        grad.setAttribute('x1','0%');
+        grad.setAttribute('y1','0%');
+        grad.setAttribute('x2','0%');
+        grad.setAttribute('y2','100%');
+        grad.setAttribute('spreadMethod',grad_spread_method);
+        grad.setAttribute('gradientUnits','userSpaceOnUse');
+        for(i=0;i<colors.length;i++){
+            stop=document.createElementNS('http://www.w3.org/2000/svg','stop');
+            if(typeof(colors[i])=="string"){
+                stop.setAttribute('offset',(i*100/colors.length)+'%');
+                stop.setAttribute('stop-color',colors[i]);
+                grad.appendChild(stop);}
+                else if(typeof(colors[i])=="object"){
+                    stop.setAttribute('offset',colors[i][0]);
+                    stop.setAttribute('stop-color',colors[i][1]);
+                    grad.appendChild(stop);
+                   
+                }
+        }
+        defs.appendChild(grad);
+        svgelem.appendChild(defs);
+    }
+    else if(style=="radial"){
+        var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        var grad=document.createElementNS('http://www.w3.org/2000/svg','radialGradient');
+        grad.setAttribute('id',id);
+        grad.setAttribute('cx','50%');
+        grad.setAttribute('cy','50%');
+        grad.setAttribute('r','50%');
+        grad.setAttribute('fx','50%');
+        grad.setAttribute('fy','50%');
+        grad.setAttribute('spreadMethod',grad_spread_method);
+        grad.setAttribute('gradientUnits','userSpaceOnUse');
+        for(i=0;i<colors.length;i++){
+            stop=document.createElementNS('http://www.w3.org/2000/svg','stop');
+            if(typeof(colors[i])=="string"){
+            stop.setAttribute('offset',(i*100/colors.length)+'%');
+            stop.setAttribute('stop-color',colors[i]);
+            grad.appendChild(stop);}
+            else if(typeof(colors[i])=="object"){
+                stop.setAttribute('offset',colors[i][0]);
+                stop.setAttribute('stop-color',colors[i][1]);
+                grad.appendChild(stop);
+               
+            }
+        }
+        defs.appendChild(grad);
+        svgelem.appendChild(defs);
+
+    }
 }
 
 
@@ -669,9 +758,10 @@ class lineGraph{
                 line_visible=true;
             }
 
-            var marker_size=data.marker.size;
-            var marker_color=data.marker.color;
-            var marker_fill=data.marker.fill;
+            var marker_size=data.marker.size|| 0;
+            console.log(marker_size);
+            var marker_color=data.marker.color ||line_color;
+            var marker_fill=data.marker.fill || "none";
             var marker_visible=data.marker.visible||false;
             var polyline_str=" ";
             var marker_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
@@ -833,9 +923,9 @@ class bezierGraph{
             if(line_visible!=false){
                 line_visible=true;
             }
-            var marker_size=data.marker.size;
-            var marker_color=data.marker.color;
-            var marker_fill=data.marker.fill;
+            var marker_size=data.marker.size||0;
+            var marker_color=data.marker.color||line_color;
+            var marker_fill=data.marker.fill||"none";
             var marker_visible=data.marker.visible||false;
 
             var marker_grp=document.createElementNS("http://www.w3.org/2000/svg","g");
