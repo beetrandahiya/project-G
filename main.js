@@ -3,10 +3,63 @@ Name :  project-G
 Creator / Author : Prakrisht Dahiya
 */
 
+////////////////////////////////////////////////////////////////////////////////
+///////////////////// Constants and Pre-Defined vaules /////////////////////////
+
+// colors and colorpalletes
+
+const applecolors=["rgb(255,59,48)",
+"rgb(255,149,0)",
+"rgb(255,204,0)",
+"rgb(52,199,89)",
+"rgb(0,199,190)",
+"rgb(48,176,199)",
+"rgb(50,173,230)",
+"rgb(0,122,255)",
+"rgb(88,86,214)",
+"rgb(175,82,222)",
+"rgb(255,45,85)",];  //apple UI colors
+
+const blue_teal_palette=[
+    "#142459",
+    "#176BA0",
+    "#19AADE",
+    "#1AC9E6",
+    "#1BD4D4",
+    "#1DE4BD",
+    "#6DF0D2",
+    "#C7F9EE"
+];
+
+const shades_of_sun=[
+    "#820401",
+    "#C02323",
+    "#DE542C",
+    "#EF7E32",
+    "#EE9A3A",
+    "#EABD3B",
+    "#E7E34E",
+    "#F7F4BF"
+];
+
+const purples_and_pinks = [
+    "#29066B",
+    "#7D3AC1",
+    "#AF4BCE",
+    "#DB4CB2",
+    "#EB548C",
+    "#EA7369",
+    "#F0A58F",
+    "#FCEAE6"
+];
+
+
+
+
 ////////////////////////////////////////////////////////
 ///////////////  Pre-Calculation ///////////////////////
 
-function graph_precalculate(graphData,layout){
+function graph_precalculate(graphData,layout,DOM_container){
     pre_calc={};
 
     //here we find the max value of the data and set the y axis domain to be the same as the max value of the data.
@@ -43,8 +96,20 @@ function graph_precalculate(graphData,layout){
     }
 
     //calculating map ratio and height, width of graph
-    h=layout.height;
-    w=layout.width;
+    if(String(layout.height).includes("%")){
+        h=parseInt(layout.height.replace("%",""));
+        h=h/100*DOM_container.parentElement.clientHeight;
+    }
+    else{
+        h=layout.height;
+    }
+    if(String(layout.width).includes("%")){
+        w=parseInt(layout.width.replace("%",""));
+        w=w/100*DOM_container.parentElement.clientWidth;
+    }
+    else{
+        w=layout.width;
+    }
     pad=layout.padding;
     h_graph=h-pad*2;
     map_ratio = h_graph / (y_max - y_min);
@@ -348,7 +413,7 @@ function makeGridBarH(DOM_container,pre_calc,layout){
 function makeTitle(DOM_container,layout){
     //making the title
     title=document.createElementNS("http://www.w3.org/2000/svg","text");
-    title.setAttribute("x",layout.width/2);
+    title.setAttribute("x",pre_calc.w/2);
     title.setAttribute("y",layout.padding/2);
     title.setAttribute("text-anchor","middle");
     title.setAttribute("font-size",layout.title.font_size);
@@ -363,7 +428,7 @@ function makeTitle(DOM_container,layout){
     
     if(layout.xaxes.title.visible!=false){
     x_title=document.createElementNS("http://www.w3.org/2000/svg","text");
-    x_title.setAttribute("x",layout.width/2);
+    x_title.setAttribute("x",pre_calc.w/2);
     x_title.setAttribute("y",layout.height-layout.padding/2);
     x_title.setAttribute("text-anchor","middle");
     x_title.setAttribute("font-size",layout.xaxes.title.font_size);
@@ -518,15 +583,15 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
 
         switch(layout.legend.position){
             case "top-right":
-                legend_line.setAttribute("x1",layout.width-layout.padding+layout.legend.padding);
+                legend_line.setAttribute("x1",pre_calc.w-layout.padding+layout.legend.padding);
                 legend_line.setAttribute("y1",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
-                legend_line.setAttribute("x2",layout.width-layout.padding+layout.legend.padding+2*layout.legend.font_size);
+                legend_line.setAttribute("x2",pre_calc.w-layout.padding+layout.legend.padding+2*layout.legend.font_size);
                 legend_line.setAttribute("y2",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
                 
-                legend_marker.setAttribute("cx",layout.width-layout.padding+layout.legend.padding+layout.legend.font_size);
+                legend_marker.setAttribute("cx",pre_calc.w-layout.padding+layout.legend.padding+layout.legend.font_size);
                 legend_marker.setAttribute("cy",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
 
-                legend_text.setAttribute("x",layout.width-layout.padding+2*layout.legend.padding+2*layout.legend.font_size);
+                legend_text.setAttribute("x",pre_calc.w-layout.padding+2*layout.legend.padding+2*layout.legend.font_size);
                 legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
                 break;
             case "top-left":
@@ -542,15 +607,15 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 legend_text.setAttribute("y",3*layout.padding/2+dataindex*(layout.legend.font_size+layout.legend.padding));
                 break;
             case "bottom-right":
-                legend_line.setAttribute("x1",layout.width-layout.padding+layout.legend.padding);
+                legend_line.setAttribute("x1",pre_calc.w-layout.padding+layout.legend.padding);
                 legend_line.setAttribute("y1",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
-                legend_line.setAttribute("x2",layout.width-layout.padding+layout.legend.padding+2*layout.legend.font_size);
+                legend_line.setAttribute("x2",pre_calc.w-layout.padding+layout.legend.padding+2*layout.legend.font_size);
                 legend_line.setAttribute("y2",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
 
-                legend_marker.setAttribute("cx",layout.width-layout.padding+layout.legend.padding+layout.legend.font_size);
+                legend_marker.setAttribute("cx",pre_calc.w-layout.padding+layout.legend.padding+layout.legend.font_size);
                 legend_marker.setAttribute("cy",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
 
-                legend_text.setAttribute("x",layout.width-layout.padding+2*layout.legend.padding+2*layout.legend.font_size);
+                legend_text.setAttribute("x",pre_calc.w-layout.padding+2*layout.legend.padding+2*layout.legend.font_size);
                 legend_text.setAttribute("y",layout.height-layout.padding-3*layout.legend.font_size+dataindex*(layout.legend.font_size+layout.legend.padding));
                 break;
             case "bottom-left":
@@ -727,7 +792,7 @@ class lineGraph{
         this.DOM_container=DOM_container;
         this.graphData=graphData;
         this.layout=layout;
-        this.pre_calc = graph_precalculate(this.graphData,this.layout);
+        this.pre_calc = graph_precalculate(this.graphData,this.layout,this.DOM_container);
         makeGrid(this.DOM_container,this.pre_calc,this.layout);
         makeTitle(this.DOM_container,this.layout);
         makeLabels(this.DOM_container,this.pre_calc,this.layout);
@@ -892,7 +957,7 @@ class bezierGraph{
         this.DOM_container=DOM_container;
         this.graphData=graphData;
         this.layout=layout;
-        this.pre_calc = graph_precalculate(this.graphData,this.layout);
+        this.pre_calc = graph_precalculate(this.graphData,this.layout,this.DOM_container);
         makeGrid(this.DOM_container,this.pre_calc,this.layout);
         makeTitle(this.DOM_container,this.layout);
         makeLabels(this.DOM_container,this.pre_calc,this.layout);
@@ -1168,6 +1233,7 @@ class scatterGraph{
 
     }
 }
+
 
 
 
