@@ -715,12 +715,12 @@ function makeGradient(DOM_identifier,style,colors,id,spread_method){
                 stop.setAttribute('offset',(i*100/colors.length)+'%');
                 stop.setAttribute('stop-color',colors[i]);
                 grad.appendChild(stop);}
-                else if(typeof(colors[i])=="object"){
-                    stop.setAttribute('offset',colors[i][0]);
-                    stop.setAttribute('stop-color',colors[i][1]);
-                    grad.appendChild(stop);
-                   
-                }
+            else if(typeof(colors[i])=="object"){
+                stop.setAttribute('offset',colors[i][0]);
+                stop.setAttribute('stop-color',colors[i][1]);
+                grad.appendChild(stop);
+                
+            }
         }
         defs.appendChild(grad);
         svgelem.appendChild(defs);
