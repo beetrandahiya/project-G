@@ -661,6 +661,8 @@ function makeLegend(DOM_container,pre_calc,graphData,layout){
                 break;
         }
         
+        //set legend style for marker
+        
         legend_marker.setAttribute("r",graphData[dataindex].marker.size);
         legend_marker.setAttribute("fill",graphData[dataindex].marker.fill);
         legend_marker.setAttribute("stroke",graphData[dataindex].marker.color);
