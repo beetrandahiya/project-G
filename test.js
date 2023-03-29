@@ -66,6 +66,94 @@ data3={
         fill_style:"from-zero",
     }
 }
+data_flyer={
+    x:[10,11,12],
+    y:[750,1500,2550],
+    name: "Flyers",
+    line:{
+        color:"#f6bf44",
+        width:3,
+        fill:"",
+       
+    },
+    marker:{
+        size:4,
+        color:"#f6bf44",
+        fill:"#f6bf4444",
+        visible:true
+    }
+}
+data_cost={
+    x:[10,11,12],
+    y:[263,60,849],
+    name: "Cost",
+    line:{
+        color:"#e9612c",
+        width:3,
+        fill:"",
+        tension:0.2
+    },
+    marker:{
+        size:4,
+        color:"#e9612c",
+        fill:"#e9612c44",
+        visible:true
+    }
+}
+data_clicks={
+    x:[10,11,12],
+    y:[358,448,1094],
+    name: "Clicks",
+    line:{
+        color:"#eb356f",
+        width:3,
+
+    },
+    marker:{
+        size:4,
+        color:"#eb356f",
+        fill:"#eb356f44",
+        visible:true
+    }
+}
+data_installs={
+    x:[10,11,12],
+    y:[56, 87, 196],
+    name: "Installs",
+    line:{
+        color:"#7844e3",
+        width:3,
+
+    },
+    marker:{
+        size:4,
+        color:"#7844e3",
+        fill:"#7844e344",
+        visible:true
+    }
+}
+data_new_users={
+    x:[10,11,12],
+    y:[758, 1000, 2550],
+    name: "New Users",
+    line:{
+        color:"#69f56e",
+        width:3,
+        fill:"",
+        fill_style:"from-min",
+        style:"dotted",
+        tension:0.2
+    },
+    marker:{
+        size:4,
+        color:"#69f56e",
+        fill:"#69f56e44",
+        visible:true
+    }
+}
+
+data_homemeal=[data_flyer,data_cost,data_clicks,data_installs,data_new_users]
+
 datasetbar=[data2]
 dataset=[data1,data]
 
@@ -88,7 +176,7 @@ layout={
     yaxes:{
         title:{text:'',fontfamily:"Montserrat"},
         no_parts:5,
-        domain:[-10,30],
+        domain:[0,2600],
         style: "solid",
         stroke:'#000000',
         stroke_width:"0.1px",
@@ -168,8 +256,7 @@ layoutbar={
     }
 };
 
-new scatterGraph(document.getElementById("container"),dataset,layout);
-new bezierGraph(document.getElementById("container1"),dataset,layout);
+new lineGraph(document.getElementById("container"),data_homemeal,layout);
 new barGraph(document.getElementById("container2"),datasetbar,layoutbar);
 //new horizontalBarGraph(document.getElementById("container2"),datasetbar,layoutbar);
 
